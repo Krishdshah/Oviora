@@ -1,26 +1,129 @@
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200');
 @import "tailwindcss";
 
+@theme {
+  --color-primary: #994711;
+  --color-primary-container: #f28c52;
+  --color-secondary: #765846;
+  --color-secondary-container: #ffd6bf;
+  --color-tertiary: #00696c;
+  --color-tertiary-container: #00b9be;
+  --color-on-tertiary-container: #004446;
+  --color-surface: #fff8f6;
+  --color-surface-dim: #e8d7cf;
+  --color-surface-bright: #fff8f6;
+  --color-surface-container-lowest: #ffffff;
+  --color-surface-container-low: #fff1eb;
+  --color-surface-container: #fceae3;
+  --color-surface-container-high: #f6e5dd;
+  --color-surface-container-highest: #f1dfd7;
+  --color-on-surface: #231a15;
+  --color-on-surface-variant: #55433a;
+  --color-inverse-surface: #382e29;
+  --color-inverse-on-surface: #ffede6;
+  --color-outline: #887368;
+  --color-outline-variant: #dbc1b5;
+  --color-primary-fixed: #ffdbca;
+  --color-primary-fixed-dim: #ffb690;
+  --color-on-primary-fixed: #331100;
+  --color-on-primary-fixed-variant: #783200;
+  --color-secondary-fixed: #ffdbc8;
+  --color-secondary-fixed-dim: #e6bfa8;
+  --color-on-secondary-fixed: #2b1609;
+  --color-on-secondary-fixed-variant: #5c4130;
+  --color-tertiary-fixed: #6cf6fb;
+  --color-tertiary-fixed-dim: #49dadf;
+  --color-on-tertiary-fixed: #002021;
+  --color-on-tertiary-fixed-variant: #004f52;
+  --color-background: #fff8f6;
+  --color-on-background: #231a15;
+  --color-surface-variant: #f1dfd7;
+  --color-error: #ba1a1a;
+  --color-error-container: #ffdad6;
+  --color-on-error-container: #93000a;
+  
+  --spacing-base: 4px;
+  --spacing-xs: 8px;
+  --spacing-sm: 12px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  --spacing-xxl: 48px;
+  --spacing-section-gap: 64px;
+
+  --radius-2xl: 24px;
+  --radius-xl: 16px;
+  --radius-lg: 12px;
+  
+  --font-sans: var(--font-inter), sans-serif;
+  --font-display-hero: var(--font-inter), sans-serif;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --background: #fff8f6;
+  --foreground: #231a15;
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+}
+
+/* Glassmorphism Cards & Panels */
+.glass-card {
+  background: rgba(255, 255, 255, 1);
+  border-radius: 24px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
+  border: 1px solid rgba(241, 223, 215, 0.5);
+  padding: 24px;
+}
+
+.glass-panel {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+  border-radius: 24px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
+  border: 1px solid rgba(241, 223, 215, 0.5);
+}
+
+.hero-gradient {
+  background: linear-gradient(135deg, #fff1eb 0%, #fceae3 100%);
+}
+
+.ai-orb-gradient {
+  background: linear-gradient(135deg, #f28c52 0%, #ffd6bf 100%);
+}
+
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  display: inline-block;
+  vertical-align: middle;
+  line-height: 1;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #dbc1b5;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #887368;
+}
+
+/* Bento Grid Layout helper */
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 24px;
 }
