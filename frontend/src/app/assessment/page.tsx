@@ -249,7 +249,7 @@ export default function AssessmentPage() {
 
       {result && (
         <div className="fixed inset-0 z-50 bg-scrim/40 backdrop-blur-sm flex items-center justify-center p-md animate-in fade-in">
-          <div className="bg-surface rounded-[32px] p-xl max-w-md w-full shadow-2xl border border-outline-variant/20 relative animate-in zoom-in-95">
+          <div className="bg-surface rounded-[32px] p-xl w-[90%] sm:w-[450px] min-w-[320px] shadow-2xl border border-outline-variant/20 relative animate-in zoom-in-95">
             <button 
               onClick={() => setResult(null)}
               className="absolute top-md right-md w-10 h-10 rounded-full bg-surface-container hover:bg-surface-container-high flex items-center justify-center text-on-surface transition-colors"
