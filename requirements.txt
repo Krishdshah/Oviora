@@ -1,0 +1,6 @@
+fastapi==0.111.0
+uvicorn==0.30.1
+catboost==1.2.5
+joblib==1.4.2
+pandas==2.2.2
+pydantic==2.7.4

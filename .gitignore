@@ -146,3 +146,6 @@ vite.config.ts.timestamp-*
 extracted_zip/
 stitch_pcos_copilot_healthcare_app.zip
 
+
+venv/
+backend/venv/
