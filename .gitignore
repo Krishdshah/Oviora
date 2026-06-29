@@ -149,3 +149,7 @@ stitch_pcos_copilot_healthcare_app.zip
 
 venv/
 backend/venv/
+
+**/__pycache__/
+*.pyc
+*.pyo
