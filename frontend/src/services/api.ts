@@ -279,7 +279,8 @@ export const apiService = {
   // ----------------------------------------------------
   predictClinicalRisk: async (payload: any) => {
     try {
-      const response = await fetch('http://localhost:8000/api/v1/clinical-risk/predict', {
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+      const response = await fetch(`${baseUrl}/api/v1/clinical-risk/predict`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
