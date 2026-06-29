@@ -163,10 +163,13 @@ export const apiService = {
   // Dashboard Data
   // ----------------------------------------------------
   getDashboardData: async () => {
-    // TODO: Replace with fetch('/api/v1/dashboard')
+    // Fetch real cycle data from the new endpoint
+    const cycleData = await apiService.getCycleData();
+    
+    // TODO: Replace with fetch('/api/v1/dashboard') when Recommendation Engine is built
     return {
       profileName: mockProfile.name,
-      cycle: mockCycleData,
+      cycle: cycleData,
       recentSymptomStatus: "Mild Acne, Moderate Fatigue",
       todayFocus: "Estrogen is rising. Great day for strength workouts and complex problem-solving.",
       tasks: [
