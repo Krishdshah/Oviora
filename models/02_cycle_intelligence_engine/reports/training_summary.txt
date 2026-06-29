@@ -1,0 +1,12 @@
+Cycle Length Prediction Engine v1
+==================================================
+
+Algorithm : Linear Regression
+Target    : LengthofCycle
+Train     : 773
+Test      : 184
+Users     : 102
+
+MAE  : 2.3963
+RMSE : 3.5172
+R2   : 0.4210

@@ -1,0 +1,20 @@
+{
+    "model_name": "Cycle Length Prediction Engine",
+    "version": "v1",
+    "algorithm": "Linear Regression",
+    "target": "LengthofCycle",
+    "features": [
+        "Age",
+        "Height",
+        "Weight",
+        "BMI",
+        "CycleNumber",
+        "Prev_Cycle_Length",
+        "Prev2_Cycle_Length",
+        "Rolling_Mean_3",
+        "Rolling_STD_3"
+    ],
+    "train_samples": 773,
+    "test_samples": 184,
+    "unique_users": 102
+}
