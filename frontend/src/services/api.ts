@@ -272,5 +272,22 @@ export const apiService = {
       ...profile
     };
     return mockProfile;
+  },
+
+  // ----------------------------------------------------
+  // Clinical Risk Engine
+  // ----------------------------------------------------
+  predictClinicalRisk: async (payload: any) => {
+    try {
+      const response = await fetch('http://localhost:8000/api/v1/clinical-risk/predict', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      return await response.json();
+    } catch (error) {
+      console.error("Error calling Clinical Risk Engine:", error);
+      throw error;
+    }
   }
 };
