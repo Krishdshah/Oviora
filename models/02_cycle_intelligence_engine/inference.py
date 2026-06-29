@@ -45,5 +45,6 @@ def predict(payload: Dict[str, Any]) -> Dict[str, Any]:
         phase=phase,
         predicted_cycle_length=predicted_cycle_length,
         predicted_ovulation_day=ovulation_day,
-        hormones=hormones
+        hormones=hormones,
+        previous_cycle_lengths=previous_cycle_lengths
     )
