@@ -19,12 +19,22 @@ class HormoneLevels(BaseModel):
     lh: int
     fsh: int
 
+class RecommendationContext(BaseModel):
+    high_energy_day: bool
+    strength_training: bool
+    hydration_priority: bool
+    iron_focus: bool
+
 class CyclePredictionResponse(BaseModel):
     cycle_day: int
     phase: str
+    phase_reason: str
     days_until_next_period: int
     predicted_cycle_length: int
     predicted_ovulation_day: int
     fertile_window: FertileWindow
     hormones: HormoneLevels
     confidence: int
+    recommendation_context: RecommendationContext
+    engine_version: str
+    model_version: str
