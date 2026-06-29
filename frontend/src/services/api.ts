@@ -199,8 +199,49 @@ export const apiService = {
   // Cycle Data
   // ----------------------------------------------------
   getCycleData: async () => {
-    // TODO: Replace with fetch('/api/v1/cycle')
-    return mockCycleData;
+    try {
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+      
+      // We will send mock profile data to the engine for now,
+      // this should eventually come from the user's actual saved state.
+      const payload = {
+        last_period_start_date: "2026-06-15",
+        age: mockProfile.age,
+        height: 165.0,
+        weight: 65.0,
+        bmi: 23.9,
+        previous_cycle_lengths: [30, 29, 31, 28, 30]
+      };
+      
+      const response = await fetch(`${baseUrl}/api/v1/cycle/predict`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      
+      if (!response.ok) {
+        throw new Error("Failed to fetch cycle data");
+      }
+      
+      const data = await response.json();
+      
+      // Map backend response to frontend interface
+      return {
+        currentDay: data.cycle_day,
+        totalDays: data.predicted_cycle_length,
+        phase: data.phase,
+        phaseRemainingDays: data.days_until_next_period, // Approximation for frontend display
+        estrogen: data.hormones.estrogen,
+        progesterone: data.hormones.progesterone,
+        lh: data.hormones.lh,
+        fsh: data.hormones.fsh
+      } as CycleData;
+      
+    } catch (error) {
+      console.error("Error calling Cycle Intelligence Engine:", error);
+      // Fallback to mock data if backend isn't running
+      return mockCycleData;
+    }
   },
 
   // ----------------------------------------------------
