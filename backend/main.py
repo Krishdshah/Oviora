@@ -86,7 +86,7 @@ if std_cycle_dir not in sys.path:
     sys.path.insert(0, std_cycle_dir)
 
 try:
-    from inference import predict as predict_std_cycle
+    from std_inference import predict as predict_std_cycle
 except ImportError as e:
     print(f"Warning: Could not import Standard Cycle engine: {e}")
     predict_std_cycle = None
