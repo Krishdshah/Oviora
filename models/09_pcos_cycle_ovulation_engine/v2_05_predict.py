@@ -23,10 +23,11 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 from datetime import datetime, timedelta
 
-PROCESSED_DIR = Path("processed")
-MODEL_DIR     = Path("models")
-FIGURE_DIR    = Path("figures")
-OUTPUT_DIR    = Path("output")
+BASE_DIR      = Path(__file__).parent
+PROCESSED_DIR = BASE_DIR / "processed"
+MODEL_DIR     = BASE_DIR / "models"
+FIGURE_DIR    = BASE_DIR / "figures"
+OUTPUT_DIR    = BASE_DIR / "output"
 FIGURE_DIR.mkdir(exist_ok=True)
 OUTPUT_DIR.mkdir(exist_ok=True)
 
