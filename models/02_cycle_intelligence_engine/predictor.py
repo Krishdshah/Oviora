@@ -86,7 +86,7 @@ def predict_cycle_length(
     prediction = model.predict(features)[0]
     
     # Bound the prediction between reasonable limits (e.g., 21 to 45)
-    from .config import MIN_CYCLE_LENGTH, MAX_CYCLE_LENGTH
+    from config import MIN_CYCLE_LENGTH, MAX_CYCLE_LENGTH
     bounded_prediction = max(MIN_CYCLE_LENGTH, min(MAX_CYCLE_LENGTH, int(round(prediction))))
     
     return bounded_prediction

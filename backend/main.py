@@ -20,7 +20,12 @@ import importlib.util
 from typing import Dict, Any
 import numpy as np
 
-from api_contract import PCOSCyclePredictRequest, PCOSCyclePredictResponse
+from api_contract import (
+    PCOSCyclePredictRequest, 
+    PCOSCyclePredictResponse,
+    CyclePredictRequest,
+    CyclePredictResponse
+)
 
 # Dynamically import clinical risk engine
 clinical_module_name = "clinical_risk_engine_inference"
@@ -74,3 +79,20 @@ def predict_cycle(payload: PCOSCyclePredictRequest):
         stress_score=payload.stress_score
     )
     return result
+
+# Dynamically import standard cycle intelligence engine
+std_cycle_dir = os.path.join(os.path.dirname(__file__), '..', 'models', '02_cycle_intelligence_engine')
+if std_cycle_dir not in sys.path:
+    sys.path.insert(0, std_cycle_dir)
+
+try:
+    from inference import predict as predict_std_cycle
+except ImportError as e:
+    print(f"Warning: Could not import Standard Cycle engine: {e}")
+    predict_std_cycle = None
+
+@app.post("/api/v1/cycle/predict", response_model=CyclePredictResponse)
+def predict_standard_cycle(payload: CyclePredictRequest):
+    if predict_std_cycle:
+        return predict_std_cycle(payload.model_dump())
+    return {"error": "Standard cycle engine not available"}

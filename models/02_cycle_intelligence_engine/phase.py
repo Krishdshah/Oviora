@@ -1,4 +1,4 @@
-from .config import MENSTRUAL_DAYS, OVULATION_WINDOW
+from config import MENSTRUAL_DAYS, OVULATION_WINDOW
 
 def determine_phase(cycle_day: int, ovulation_day: int) -> str:
     """
