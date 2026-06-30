@@ -1,0 +1,20 @@
+# OvulAI — PCOS Cycle & Ovulation Intelligence Engine
+# Core ML
+torch>=2.0
+catboost>=1.2
+xgboost>=2.0
+lightgbm>=4.0
+scikit-learn>=1.4
+optuna>=3.0
+shap>=0.44
+
+# Data
+pandas>=2.0
+numpy>=1.26
+
+# Visualization
+matplotlib>=3.8
+
+# API server
+flask>=3.0
+flask-cors>=4.0
