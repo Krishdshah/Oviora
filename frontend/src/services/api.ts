@@ -210,13 +210,16 @@ export const apiService = {
       const payload = {
         last_period_start_date: "2026-06-15",
         age: mockProfile.age,
-        height: 165.0,
+        height: 165.0, // using default
         weight: 65.0,
         bmi: 23.9,
-        previous_cycle_lengths: [30, 29, 31, 28, 30]
+        previous_cycle_lengths: [30, 29, 31, 28, 30],
+        pcos_diagnosed: true,
+        sleep_hours: 6.5,
+        stress_score: 5.0
       };
       
-      const response = await fetch(`${baseUrl}/api/v1/cycle/predict`, {
+      const response = await fetch(`${baseUrl}/api/v1/pcos-cycle/predict`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -230,14 +233,14 @@ export const apiService = {
       
       // Map backend response to frontend interface
       return {
-        currentDay: data.cycle_day,
+        currentDay: data.cycle_day_today || 6,
         totalDays: data.predicted_cycle_length,
-        phase: data.phase,
-        phaseRemainingDays: data.days_until_next_period, // Approximation for frontend display
-        estrogen: data.hormones.estrogen,
-        progesterone: data.hormones.progesterone,
-        lh: data.hormones.lh,
-        fsh: data.hormones.fsh
+        phase: "Follicular", // Can be calculated based on currentDay vs ovulation_day_of_cycle
+        phaseRemainingDays: data.days_until_next_period || 6, // Approximation for frontend display
+        estrogen: 120, // default placeholder
+        progesterone: 0.8, // default placeholder
+        lh: 8.5, // default placeholder
+        fsh: 6.2 // default placeholder
       } as CycleData;
       
     } catch (error) {
