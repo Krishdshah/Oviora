@@ -1,0 +1,101 @@
+{
+  "predicted_cycle_length": 28.32,
+  "prediction_confidence_score": 0.77,
+  "confidence_percent": 77,
+  "risk_level": "Regular",
+  "risk_score": 0.15,
+  "risk_color": "#22C55E",
+  "risk_description": "Cycle pattern appears stable and within normal range.",
+  "ovulation_day_of_cycle": 14,
+  "fertile_window_days": "Days 9 to 15",
+  "last_period_start_date": "2026-06-01",
+  "estimated_next_period_date": "2026-06-29",
+  "estimated_ovulation_date": "2026-06-15",
+  "fertile_window_dates": "2026-06-10 to 2026-06-16",
+  "days_until_ovulation": -16,
+  "days_until_next_period": -2,
+  "cycle_day_today": 30,
+  "cycle_regularity": "Regular",
+  "pcos_profile_status": "PCOS Confirmed",
+  "why_this_prediction": "The strongest signal is your **PCOS diagnosis**, increasing the predicted cycle length by ~0.5 days. Your **longest recent cycle** is also influential, nudging the estimate decreasing by ~0.1 days. Additionally, your **longest recent cycle** contributes a smaller downward adjustment of ~0.1 days. PCOS typically introduces higher cycle variability, which is reflected in the model's confidence interval.",
+  "top_contributing_features": [
+    {
+      "feature": "pcos_diagnosed",
+      "label": "PCOS diagnosis",
+      "shap_value": 0.509,
+      "direction": "positive"
+    },
+    {
+      "feature": "rolling_max_10 [t-0]",
+      "label": "longest recent cycle",
+      "shap_value": -0.089,
+      "direction": "negative"
+    },
+    {
+      "feature": "rolling_max [t-0]",
+      "label": "longest recent cycle",
+      "shap_value": -0.076,
+      "direction": "negative"
+    },
+    {
+      "feature": "rolling_mean_10 [t-0]",
+      "label": "historical cycle average",
+      "shap_value": -0.069,
+      "direction": "negative"
+    },
+    {
+      "feature": "ema_cycle [t-0]",
+      "label": "ema cycle",
+      "shap_value": -0.056,
+      "direction": "negative"
+    },
+    {
+      "feature": "ema_cycle [t-2]",
+      "label": "ema cycle",
+      "shap_value": -0.05,
+      "direction": "negative"
+    }
+  ],
+  "recommendations": [
+    {
+      "category": "Cycle Tracking",
+      "message": "Track LH surge starting Day 10 using an OPK kit.",
+      "priority": "high",
+      "icon": "📅"
+    },
+    {
+      "category": "PCOS Management",
+      "message": "Maintain a low-GI diet and regular light exercise to support hormonal balance.",
+      "priority": "high",
+      "icon": "🩺"
+    },
+    {
+      "category": "Sleep",
+      "message": "You averaged 6.7h of sleep. Aim for 7–8 hours — poor sleep disrupts LH and FSH secretion.",
+      "priority": "medium",
+      "icon": "🌙"
+    },
+    {
+      "category": "Stress Management",
+      "message": "High stress can suppress ovulation. Try 10 min of mindfulness or light yoga daily.",
+      "priority": "medium",
+      "icon": "🧘"
+    },
+    {
+      "category": "Lifestyle",
+      "message": "Stay hydrated (2–3 L/day). Dehydration can worsen PMS symptoms and cycle irregularity.",
+      "priority": "low",
+      "icon": "💧"
+    }
+  ],
+  "model_predictions_breakdown": {
+    "XGBoost": 29.17,
+    "LightGBM": 27.29,
+    "CatBoost": 27.68,
+    "Stacked_Ensemble": 28.32
+  },
+  "model_agreement_std": 0.81,
+  "shap_plot": "figures/shap_local_impact.png",
+  "generated_at": "2026-06-30T05:29:30.132248",
+  "engine": "OvulAI v3 — Stacked Ensemble (XGB + LGBM + CatBoost + Ridge Meta)"
+}
