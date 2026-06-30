@@ -1,0 +1,126 @@
+{
+  "ALT": {
+    "canonical_name": "ALT",
+    "aliases": [
+      "ALT",
+      "SGPT",
+      "Alanine Aminotransferase",
+      "Alanine Transaminase"
+    ],
+    "category": "Liver Function",
+    "expected_units": [
+      "U/L",
+      "IU/L"
+    ],
+    "importance": "High",
+    "required": false,
+    "clinical_significance": "Elevated ALT may be associated with liver injury or metabolic dysfunction, including NAFLD."
+  },
+  "AST": {
+    "canonical_name": "AST",
+    "aliases": [
+      "AST",
+      "SGOT",
+      "Aspartate Aminotransferase",
+      "Aspartate Transaminase"
+    ],
+    "category": "Liver Function",
+    "expected_units": [
+      "U/L",
+      "IU/L"
+    ],
+    "importance": "High",
+    "required": false,
+    "clinical_significance": "Interpreted alongside ALT when assessing liver health."
+  },
+  "ALP": {
+    "canonical_name": "ALP",
+    "aliases": [
+      "ALP",
+      "Alkaline Phosphatase"
+    ],
+    "category": "Liver Function",
+    "expected_units": [
+      "U/L",
+      "IU/L"
+    ],
+    "importance": "Medium",
+    "required": false,
+    "clinical_significance": "May reflect hepatobiliary or bone disorders depending on clinical context."
+  },
+  "GGT": {
+    "canonical_name": "GGT",
+    "aliases": [
+      "GGT",
+      "Gamma GT",
+      "Gamma Glutamyl Transferase"
+    ],
+    "category": "Liver Function",
+    "expected_units": [
+      "U/L",
+      "IU/L"
+    ],
+    "importance": "Medium",
+    "required": false,
+    "clinical_significance": "Supports assessment of hepatobiliary disease."
+  },
+  "Total Bilirubin": {
+    "canonical_name": "Total Bilirubin",
+    "aliases": [
+      "Total Bilirubin",
+      "Bilirubin Total"
+    ],
+    "category": "Liver Function",
+    "expected_units": [
+      "mg/dL",
+      "µmol/L"
+    ],
+    "importance": "Medium",
+    "required": false,
+    "clinical_significance": "General marker of bilirubin metabolism."
+  },
+  "Direct Bilirubin": {
+    "canonical_name": "Direct Bilirubin",
+    "aliases": [
+      "Direct Bilirubin",
+      "Conjugated Bilirubin"
+    ],
+    "category": "Liver Function",
+    "expected_units": [
+      "mg/dL",
+      "µmol/L"
+    ],
+    "importance": "Low",
+    "required": false,
+    "clinical_significance": "Used with total bilirubin to evaluate cholestatic patterns."
+  },
+  "Albumin": {
+    "canonical_name": "Albumin",
+    "aliases": [
+      "Albumin",
+      "Serum Albumin"
+    ],
+    "category": "Liver Function",
+    "expected_units": [
+      "g/dL"
+    ],
+    "importance": "Medium",
+    "required": false,
+    "clinical_significance": "Reflects hepatic synthetic function and nutritional status."
+  },
+  "Total Protein": {
+    "canonical_name": "Total Protein",
+    "aliases": [
+      "Total Protein",
+      "Serum Protein",
+      "Protein Total"
+    ],
+    "category": "Liver Function",
+    "expected_units": [
+      "g/dL"
+    ],
+    "importance": "Low",
+    "required": false,
+    "clinical_significance": "Measured alongside albumin to assess protein balance."
+  }
+}

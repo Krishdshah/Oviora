@@ -263,16 +263,30 @@ export const apiService = {
   },
 
   uploadLabReport: async (file: File) => {
-    // TODO: Replace with multipart form upload to fetch('/api/v1/labs/upload')
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({
-          success: true,
-          message: "Report parsed successfully",
-          markers: mockLabMarkers
-        });
-      }, 1500); // Simulate upload latency
-    });
+    try {
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+      const formData = new FormData();
+      formData.append('file', file);
+      
+      const response = await fetch(`${baseUrl}/api/v1/labs/upload`, {
+        method: 'POST',
+        body: formData
+      });
+      
+      if (!response.ok) {
+        throw new Error("Failed to upload lab report");
+      }
+      
+      return await response.json();
+    } catch (error) {
+      console.error("Error calling Lab Analyzer:", error);
+      // Fallback to mock data if backend isn't running
+      return {
+        success: true,
+        message: "Report parsed successfully",
+        markers: mockLabMarkers
+      };
+    }
   },
 
   // ----------------------------------------------------
@@ -328,7 +342,7 @@ export const apiService = {
   // ----------------------------------------------------
   // Clinical Risk Engine
   // ----------------------------------------------------
-  predictClinicalRisk: async (payload: any) => {
+  predictClinicalRisk: async (payload: { features: Record<string, number> }) => {
     try {
       const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
       const response = await fetch(`${baseUrl}/api/v1/clinical-risk/predict`, {

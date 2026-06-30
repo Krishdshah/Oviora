@@ -1,0 +1,97 @@
+{
+  "TSH": {
+    "canonical_name": "TSH",
+    "aliases": [
+      "TSH",
+      "Serum TSH",
+      "Ultra Sensitive TSH",
+      "TSH 3rd Generation",
+      "Thyroid Stimulating Hormone"
+    ],
+    "category": "Thyroid",
+    "expected_units": [
+      "uIU/mL",
+      "mIU/L"
+    ],
+    "importance": "High",
+    "required": true,
+    "clinical_significance": "Screens for thyroid dysfunction that can overlap with PCOS symptoms."
+  },
+  "Free T3": {
+    "canonical_name": "Free T3",
+    "aliases": [
+      "Free T3",
+      "FT3",
+      "Triiodothyronine, Free"
+    ],
+    "category": "Thyroid",
+    "expected_units": [
+      "pg/mL"
+    ],
+    "importance": "Medium",
+    "required": false,
+    "clinical_significance": "Assesses circulating free triiodothyronine."
+  },
+  "Free T4": {
+    "canonical_name": "Free T4",
+    "aliases": [
+      "Free T4",
+      "FT4",
+      "Thyroxine, Free"
+    ],
+    "category": "Thyroid",
+    "expected_units": [
+      "ng/dL"
+    ],
+    "importance": "Medium",
+    "required": false,
+    "clinical_significance": "Used with TSH to evaluate thyroid function."
+  },
+  "Total T3": {
+    "canonical_name": "Total T3",
+    "aliases": [
+      "Total T3",
+      "T3",
+      "Triiodothyronine"
+    ],
+    "category": "Thyroid",
+    "expected_units": [
+      "ng/dL"
+    ],
+    "importance": "Low",
+    "required": false,
+    "clinical_significance": "Supplementary thyroid marker."
+  },
+  "Total T4": {
+    "canonical_name": "Total T4",
+    "aliases": [
+      "Total T4",
+      "T4",
+      "Thyroxine"
+    ],
+    "category": "Thyroid",
+    "expected_units": [
+      "µg/dL",
+      "ug/dL"
+    ],
+    "importance": "Low",
+    "required": false,
+    "clinical_significance": "Supplementary thyroid marker."
+  },
+  "Anti-TPO": {
+    "canonical_name": "Anti-TPO",
+    "aliases": [
+      "Anti TPO",
+      "Anti-TPO",
+      "Thyroid Peroxidase Antibody",
+      "TPO Antibody"
+    ],
+    "category": "Thyroid",
+    "expected_units": [
+      "IU/mL"
+    ],
+    "importance": "Medium",
+    "required": false,
+    "clinical_significance": "May support evaluation for autoimmune thyroid disease."
+  }
+}

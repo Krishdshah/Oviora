@@ -1,0 +1,148 @@
+{
+  "LH": {
+    "canonical_name": "LH",
+    "aliases": [
+      "LH",
+      "Luteinizing Hormone",
+      "Serum LH"
+    ],
+    "category": "Hormone",
+    "expected_units": [
+      "mIU/mL"
+    ],
+    "importance": "High",
+    "required": true,
+    "clinical_significance": "Often elevated relative to FSH in PCOS."
+  },
+  "FSH": {
+    "canonical_name": "FSH",
+    "aliases": [
+      "FSH",
+      "Follicle Stimulating Hormone",
+      "Serum FSH"
+    ],
+    "category": "Hormone",
+    "expected_units": [
+      "mIU/mL"
+    ],
+    "importance": "High",
+    "required": true,
+    "clinical_significance": "Used with LH to calculate LH/FSH ratio."
+  },
+  "AMH": {
+    "canonical_name": "AMH",
+    "aliases": [
+      "AMH",
+      "Anti Mullerian Hormone",
+      "Anti-Müllerian Hormone",
+      "Anti Mullerian"
+    ],
+    "category": "Hormone",
+    "expected_units": [
+      "ng/mL"
+    ],
+    "importance": "High",
+    "required": false,
+    "clinical_significance": "May be elevated in many patients with PCOS."
+  },
+  "Testosterone": {
+    "canonical_name": "Testosterone",
+    "aliases": [
+      "Testosterone",
+      "Total Testosterone",
+      "Serum Testosterone"
+    ],
+    "category": "Androgen",
+    "expected_units": [
+      "ng/dL"
+    ],
+    "importance": "High",
+    "required": true,
+    "clinical_significance": "Helps evaluate androgen excess."
+  },
+  "Free Testosterone": {
+    "canonical_name": "Free Testosterone",
+    "aliases": [
+      "Free Testosterone",
+      "Calculated Free Testosterone"
+    ],
+    "category": "Androgen",
+    "expected_units": [
+      "pg/mL"
+    ],
+    "importance": "High",
+    "required": false,
+    "clinical_significance": "Useful marker for biochemical hyperandrogenism."
+  },
+  "DHEAS": {
+    "canonical_name": "DHEAS",
+    "aliases": [
+      "DHEAS",
+      "DHEA-S",
+      "Dehydroepiandrosterone Sulfate"
+    ],
+    "category": "Androgen",
+    "expected_units": [
+      "µg/dL",
+      "ug/dL"
+    ],
+    "importance": "Medium",
+    "required": false,
+    "clinical_significance": "Evaluates adrenal androgen production."
+  },
+  "SHBG": {
+    "canonical_name": "SHBG",
+    "aliases": [
+      "SHBG",
+      "Sex Hormone Binding Globulin"
+    ],
+    "category": "Hormone",
+    "expected_units": [
+      "nmol/L"
+    ],
+    "importance": "Medium",
+    "required": false,
+    "clinical_significance": "Low SHBG may increase free androgen activity."
+  },
+  "Estradiol": {
+    "canonical_name": "Estradiol",
+    "aliases": [
+      "Estradiol",
+      "E2"
+    ],
+    "category": "Hormone",
+    "expected_units": [
+      "pg/mL"
+    ],
+    "importance": "Medium",
+    "required": false,
+    "clinical_significance": "Assesses ovarian estrogen production."
+  },
+  "Progesterone": {
+    "canonical_name": "Progesterone",
+    "aliases": [
+      "Progesterone"
+    ],
+    "category": "Hormone",
+    "expected_units": [
+      "ng/mL"
+    ],
+    "importance": "Medium",
+    "required": false,
+    "clinical_significance": "Helps assess ovulation."
+  },
+  "Prolactin": {
+    "canonical_name": "Prolactin",
+    "aliases": [
+      "Prolactin",
+      "Serum Prolactin"
+    ],
+    "category": "Hormone",
+    "expected_units": [
+      "ng/mL"
+    ],
+    "importance": "High",
+    "required": true,
+    "clinical_significance": "Elevated prolactin can mimic PCOS symptoms."
+  }
+}

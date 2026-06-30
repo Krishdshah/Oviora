@@ -1,0 +1,133 @@
+{
+  "HbA1c": {
+    "canonical_name": "HbA1c",
+    "aliases": [
+      "HbA1c",
+      "HBA1C",
+      "Glycated Hemoglobin",
+      "Hemoglobin A1c",
+      "Glycosylated Hemoglobin"
+    ],
+    "category": "Metabolic",
+    "expected_units": [
+      "%"
+    ],
+    "importance": "High",
+    "required": true,
+    "clinical_significance": "Assesses average blood glucose over the previous 2–3 months."
+  },
+  "Fasting Glucose": {
+    "canonical_name": "Fasting Glucose",
+    "aliases": [
+      "Fasting Blood Sugar",
+      "FBS",
+      "Fasting Glucose",
+      "Fasting Plasma Glucose",
+      "FBG"
+    ],
+    "category": "Metabolic",
+    "expected_units": [
+      "mg/dL",
+      "mmol/L"
+    ],
+    "importance": "High",
+    "required": true,
+    "clinical_significance": "Primary marker for fasting glycemic status."
+  },
+  "Random Glucose": {
+    "canonical_name": "Random Glucose",
+    "aliases": [
+      "Random Blood Sugar",
+      "RBS",
+      "Random Glucose"
+    ],
+    "category": "Metabolic",
+    "expected_units": [
+      "mg/dL",
+      "mmol/L"
+    ],
+    "importance": "Medium",
+    "required": false,
+    "clinical_significance": "Provides non-fasting blood glucose measurement."
+  },
+  "Fasting Insulin": {
+    "canonical_name": "Fasting Insulin",
+    "aliases": [
+      "Fasting Insulin",
+      "Insulin Fasting",
+      "Serum Insulin"
+    ],
+    "category": "Metabolic",
+    "expected_units": [
+      "µIU/mL",
+      "uIU/mL",
+      "mIU/L"
+    ],
+    "importance": "High",
+    "required": false,
+    "clinical_significance": "Used with fasting glucose to assess insulin resistance."
+  },
+  "HOMA-IR": {
+    "canonical_name": "HOMA-IR",
+    "aliases": [
+      "HOMA IR",
+      "HOMA-IR",
+      "Homeostatic Model Assessment"
+    ],
+    "category": "Derived",
+    "expected_units": [
+      "index"
+    ],
+    "importance": "High",
+    "required": false,
+    "derived": true,
+    "clinical_significance": "Calculated index estimating insulin resistance."
+  },
+  "OGTT Glucose": {
+    "canonical_name": "OGTT Glucose",
+    "aliases": [
+      "OGTT",
+      "Oral Glucose Tolerance Test",
+      "2 Hour Glucose"
+    ],
+    "category": "Metabolic",
+    "expected_units": [
+      "mg/dL",
+      "mmol/L"
+    ],
+    "importance": "Medium",
+    "required": false,
+    "clinical_significance": "Evaluates glucose handling after an oral glucose load."
+  },
+  "OGTT Insulin": {
+    "canonical_name": "OGTT Insulin",
+    "aliases": [
+      "OGTT Insulin",
+      "2 Hour Insulin",
+      "Post Load Insulin"
+    ],
+    "category": "Metabolic",
+    "expected_units": [
+      "µIU/mL",
+      "uIU/mL"
+    ],
+    "importance": "Medium",
+    "required": false,
+    "clinical_significance": "Evaluates insulin response during OGTT."
+  },
+  "C-Peptide": {
+    "canonical_name": "C-Peptide",
+    "aliases": [
+      "C Peptide",
+      "C-Peptide",
+      "Serum C-Peptide"
+    ],
+    "category": "Metabolic",
+    "expected_units": [
+      "ng/mL"
+    ],
+    "importance": "Low",
+    "required": false,
+    "clinical_significance": "Reflects endogenous insulin production."
+  }
+}

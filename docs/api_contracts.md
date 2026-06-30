@@ -10,7 +10,16 @@ Responsible for AI PCOS Risk Assessment and overall clinical risk profiling base
 
 #### `POST /api/v1/clinical-risk/predict`
 - **Description**: Analyzes clinical parameters and predicts PCOS risk score.
-- **Request Body**: (to be defined by `feature_schema.json`)
+- **Request Body**:
+  ```json
+  {
+    "features": {
+      " Age (yrs)": 28,
+      "Weight (Kg)": 65,
+      "...": "..."
+    }
+  }
+  ```
 - **Response**: `200 OK`
   ```json
   {
@@ -30,58 +39,75 @@ Predicts PCOS cycle patterns and ovulation timing using ensemble machine learnin
 - **Request Body**:
   ```json
   {
-    "dynamic_features": [<list of dynamic biomarkers>],
-    "static_features": [<list of static patient features>],
-    "fold_id": 1
+    "last_period_start_date": "2026-06-15",
+    "age": 28,
+    "height": 165.0,
+    "weight": 65.0,
+    "bmi": 23.9,
+    "previous_cycle_lengths": [30, 29, 31, 28, 30],
+    "pcos_diagnosed": true,
+    "sleep_hours": 6.5,
+    "stress_score": 5.0
   }
   ```
 - **Response**: `200 OK`
   ```json
   {
-    "prediction": 14.2,
-    "confidence": 0.92,
-    "cycle_phase": "ovulation",
-    "predicted_days_to_ovulation": 2,
-    "model": "ensemble_meta_learner_v2"
+    "predicted_cycle_length": 32.5,
+    "prediction_confidence_score": 0.88,
+    "confidence_percent": 88,
+    "risk_level": "Slightly Irregular",
+    "risk_score": 0.45,
+    "ovulation_day_of_cycle": 18
   }
   ```
 
-#### `GET /api/v1/pcos-cycle/metrics`
-- **Description**: Returns model performance metrics across all 5 folds.
-- **Response**: `200 OK`
-  ```json
-  {
-    "mae": 2.34,
-    "rmse": 3.12,
-    "r2_score": 0.88,
-    "cross_validation_folds": 5,
-    "ensemble_type": "meta_learner"
-  }
-  ```
+---
 
-#### `POST /api/v1/pcos-cycle/batch-predict`
-- **Description**: Batch predictions for multiple patients.
+### Standard Cycle Intelligence Engine
+Predicts standard cycle patterns and ovulation timing for users without PCOS.
+
+#### `POST /api/v1/cycle/predict`
+- **Description**: Predicts cycle data.
 - **Request Body**:
   ```json
   {
-    "patients": [
-      {"id": "p1", "dynamic_features": [...], "static_features": [...]},
-      {"id": "p2", "dynamic_features": [...], "static_features": [...]}
-    ]
+    "last_period_start_date": "2026-06-15",
+    "age": 25,
+    "height": 165.0,
+    "weight": 65.0,
+    "bmi": 23.9,
+    "previous_cycle_lengths": [28, 29, 28]
   }
   ```
 - **Response**: `200 OK`
   ```json
   {
-    "results": [
-      {"patient_id": "p1", "prediction": 14.2, "confidence": 0.92},
-      {"patient_id": "p2", "prediction": 9.8, "confidence": 0.85}
-    ],
-    "batch_size": 2,
-    "processing_time_ms": 145
+    "cycle_day": 16,
+    "predicted_cycle_length": 28,
+    "predicted_ovulation_day": 14
   }
   ```
 
+---
+
+### Hormone Analysis Engine
+Responsible for OCR parsing and AI analysis of laboratory test reports.
+
+#### `POST /api/v1/labs/upload`
+- **Description**: Uploads a lab report file (PDF/Image) for parsing and AI analysis.
+- **Request Format**: `multipart/form-data`
+  - `file`: The lab report file.
+- **Response**: `200 OK`
+  ```json
+  {
+    "success": true,
+    "data": {
+       "executive_summary": "...",
+       "hormonal_assessment": "..."
+    }
+  }
+  ```
 ---
 
 ### Future Engines

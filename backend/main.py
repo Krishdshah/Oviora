@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="Oviora Backend API")
@@ -24,7 +24,10 @@ from api_contract import (
     PCOSCyclePredictRequest, 
     PCOSCyclePredictResponse,
     CyclePredictRequest,
-    CyclePredictResponse
+    CyclePredictResponse,
+    ClinicalRiskPredictRequest,
+    ClinicalRiskPredictResponse,
+    HormoneAnalysisResponse
 )
 
 # Dynamically import clinical risk engine
@@ -36,14 +39,14 @@ if os.path.exists(clinical_module_path):
     sys.modules[clinical_module_name] = clinical_inference
     clinical_spec.loader.exec_module(clinical_inference)
 
-@app.post("/api/v1/clinical-risk/predict")
-def predict_clinical_risk(payload: Dict[str, Any]):
+@app.post("/api/v1/clinical-risk/predict", response_model=ClinicalRiskPredictResponse)
+def predict_clinical_risk(payload: ClinicalRiskPredictRequest):
     if 'clinical_inference' in globals():
-        return clinical_inference.predict(payload)
+        return clinical_inference.predict(payload.features)
     return {"error": "Clinical risk engine not available"}
 
 # Dynamically import pcos cycle ovulation engine
-cycle_dir = os.path.join(os.path.dirname(__file__), '..', 'models', '09_pcos_cycle_ovulation_engine')
+cycle_dir = os.path.join(os.path.dirname(__file__), '..', 'models', '04_pcos_cycle_ovulation_engine')
 if cycle_dir not in sys.path:
     sys.path.insert(0, cycle_dir)
 
@@ -96,3 +99,39 @@ def predict_standard_cycle(payload: CyclePredictRequest):
     if predict_std_cycle:
         return predict_std_cycle(payload.model_dump())
     return {"error": "Standard cycle engine not available"}
+
+# Dynamically import hormone analysis engine
+hormone_module_name = "hormone_inference"
+hormone_module_path = os.path.join(os.path.dirname(__file__), '..', 'models', '03_hormone_analysis_engine', 'inference.py')
+if os.path.exists(hormone_module_path):
+    hormone_spec = importlib.util.spec_from_file_location(hormone_module_name, hormone_module_path)
+    hormone_inference = importlib.util.module_from_spec(hormone_spec)
+    sys.modules[hormone_module_name] = hormone_inference
+    hormone_spec.loader.exec_module(hormone_inference)
+
+@app.post("/api/v1/labs/upload", response_model=HormoneAnalysisResponse)
+def upload_lab_report(file: UploadFile = File(...)):
+    if 'hormone_inference' not in globals():
+        return {"success": False, "error": "Hormone analysis engine not available"}
+    
+    try:
+        # Create uploads directory if not exists
+        uploads_dir = os.path.join(os.path.dirname(__file__), 'uploads')
+        os.makedirs(uploads_dir, exist_ok=True)
+        
+        file_path = os.path.join(uploads_dir, file.filename)
+        with open(file_path, "wb") as f:
+            f.write(file.file.read())
+            
+        result = hormone_inference.predict(file_path)
+        
+        # Optionally clean up the file
+        if os.path.exists(file_path):
+            os.remove(file_path)
+            
+        if "error" in result:
+            return {"success": False, "error": result["error"]}
+            
+        return {"success": True, "data": result}
+    except Exception as e:
+        return {"success": False, "error": str(e)}

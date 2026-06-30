@@ -1,0 +1,78 @@
+{
+  "CRP": {
+    "canonical_name": "CRP",
+    "aliases": [
+      "CRP",
+      "C Reactive Protein",
+      "C-Reactive Protein"
+    ],
+    "category": "Inflammation",
+    "expected_units": [
+      "mg/L",
+      "mg/dL"
+    ],
+    "importance": "High",
+    "required": false,
+    "clinical_significance": "General marker of systemic inflammation that may be elevated in metabolic disorders."
+  },
+  "hs-CRP": {
+    "canonical_name": "hs-CRP",
+    "aliases": [
+      "hs-CRP",
+      "High Sensitivity CRP",
+      "High-Sensitivity C-Reactive Protein"
+    ],
+    "category": "Inflammation",
+    "expected_units": [
+      "mg/L"
+    ],
+    "importance": "High",
+    "required": false,
+    "clinical_significance": "Used to assess low-grade inflammation and cardiovascular risk."
+  },
+  "ESR": {
+    "canonical_name": "ESR",
+    "aliases": [
+      "ESR",
+      "Erythrocyte Sedimentation Rate",
+      "Sed Rate"
+    ],
+    "category": "Inflammation",
+    "expected_units": [
+      "mm/hr"
+    ],
+    "importance": "Medium",
+    "required": false,
+    "clinical_significance": "Non-specific marker of inflammation."
+  },
+  "Homocysteine": {
+    "canonical_name": "Homocysteine",
+    "aliases": [
+      "Homocysteine",
+      "Serum Homocysteine",
+      "Plasma Homocysteine"
+    ],
+    "category": "Inflammation",
+    "expected_units": [
+      "µmol/L",
+      "umol/L"
+    ],
+    "importance": "Medium",
+    "required": false,
+    "clinical_significance": "Elevated levels may be associated with cardiovascular risk."
+  },
+  "Uric Acid": {
+    "canonical_name": "Uric Acid",
+    "aliases": [
+      "Uric Acid",
+      "Serum Uric Acid"
+    ],
+    "category": "Metabolic",
+    "expected_units": [
+      "mg/dL"
+    ],
+    "importance": "Low",
+    "required": false,
+    "clinical_significance": "May be elevated in metabolic syndrome and insulin resistance."
+  }
+}

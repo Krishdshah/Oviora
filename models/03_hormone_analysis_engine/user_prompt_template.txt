@@ -1,0 +1,74 @@
+Oviora Hormone Intelligence
+
+User Prompt Template
+
+Use the structured laboratory data below to generate a medically
+conservative explanation.
+
+IMPORTANT INSTRUCTIONS
+
+-   Use ONLY the information provided.
+-   Do NOT invent biomarkers, values, reference ranges, diagnoses, or
+    treatments.
+-   If data are missing, explicitly state that additional testing may be
+    helpful.
+-   Return valid JSON matching the required schema.
+
+------------------------------------------------------------------------
+
+Patient Metadata
+
+{{PATIENT_METADATA}}
+
+------------------------------------------------------------------------
+
+Detected Biomarkers
+
+{{BIOMARKERS}}
+
+------------------------------------------------------------------------
+
+Derived Metrics
+
+{{DERIVED_METRICS}}
+
+------------------------------------------------------------------------
+
+Reference Ranges
+
+{{REFERENCE_RANGES}}
+
+------------------------------------------------------------------------
+
+Abnormal Findings
+
+{{ABNORMAL_FINDINGS}}
+
+------------------------------------------------------------------------
+
+Missing Biomarkers
+
+{{MISSING_BIOMARKERS}}
+
+------------------------------------------------------------------------
+
+Parser Confidence
+
+{{PARSER_CONFIDENCE}}
+
+OCR Confidence
+
+{{OCR_CONFIDENCE}}
+
+Overall Confidence
+
+{{OVERALL_CONFIDENCE}}
+
+------------------------------------------------------------------------
+
+Generate a JSON response containing exactly these keys:
+
+{ “executive_summary”: ““,”abnormal_findings”: [],
+“hormonal_assessment”: ““,”thyroid_assessment”:
+““,”metabolic_assessment”: ““,”vitamin_assessment”: ““,”pcos_insights”:
+““,”doctor_questions”: [], “follow_up_tests”: [], “limitations”: [] }
