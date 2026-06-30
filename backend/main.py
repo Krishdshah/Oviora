@@ -50,11 +50,30 @@ cycle_dir = os.path.join(os.path.dirname(__file__), '..', 'models', '04_pcos_cyc
 if cycle_dir not in sys.path:
     sys.path.insert(0, cycle_dir)
 
+import os
+from pathlib import Path
+
+current_cwd = os.getcwd()
 try:
+    os.chdir(cycle_dir)
     from v2_05_predict import predict as predict_pcos
+    import v2_05_predict
     from api import _parse_dynamic
+    
+    # Fix runtime paths inside the module to point to correct locations
+    v2_05_predict.PROCESSED_DIR = Path(cycle_dir) / "processed"
+    v2_05_predict.MODEL_DIR = Path(cycle_dir) / "models"
+    v2_05_predict.FIGURE_DIR = Path(cycle_dir) / "figures"
+    v2_05_predict.OUTPUT_DIR = Path(cycle_dir) / "output"
+    os.chdir(current_cwd)
 except ImportError as e:
+    os.chdir(current_cwd)
     print(f"Warning: Could not import PCOS cycle engine: {e}")
+    predict_pcos = None
+    _parse_dynamic = None
+except Exception as e:
+    os.chdir(current_cwd)
+    print(f"Warning: Exception while importing PCOS cycle engine: {e}")
     predict_pcos = None
     _parse_dynamic = None
 
@@ -103,11 +122,17 @@ def predict_standard_cycle(payload: CyclePredictRequest):
 # Dynamically import hormone analysis engine
 hormone_module_name = "hormone_inference"
 hormone_module_path = os.path.join(os.path.dirname(__file__), '..', 'models', '03_hormone_analysis_engine', 'inference.py')
-if os.path.exists(hormone_module_path):
-    hormone_spec = importlib.util.spec_from_file_location(hormone_module_name, hormone_module_path)
-    hormone_inference = importlib.util.module_from_spec(hormone_spec)
-    sys.modules[hormone_module_name] = hormone_inference
-    hormone_spec.loader.exec_module(hormone_inference)
+try:
+    if os.path.exists(hormone_module_path):
+        hormone_spec = importlib.util.spec_from_file_location(hormone_module_name, hormone_module_path)
+        hormone_inference = importlib.util.module_from_spec(hormone_spec)
+        sys.modules[hormone_module_name] = hormone_inference
+        hormone_spec.loader.exec_module(hormone_inference)
+except Exception as e:
+    print(f"Warning: Could not import hormone analysis engine: {e}")
+    # Remove from sys.modules if it was added before failure
+    if hormone_module_name in sys.modules:
+        del sys.modules[hormone_module_name]
 
 @app.post("/api/v1/labs/upload", response_model=HormoneAnalysisResponse)
 def upload_lab_report(file: UploadFile = File(...)):

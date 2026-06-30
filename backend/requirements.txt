@@ -14,3 +14,11 @@ shap>=0.44
 matplotlib>=3.8
 flask>=3.0
 flask-cors>=4.0
+
+# Additional dependencies for OCR and configuration
+pydantic-settings
+opencv-python-headless
+pdf2image
+python-multipart
+paddleocr
+paddlepaddle
