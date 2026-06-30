@@ -62,7 +62,7 @@ Build the world's most comprehensive AI-powered PCOS management platform by comb
 |--------|--------|----------|
 | Clinical Risk Engine | ✅ Complete | 100% |
 | Cycle Intelligence Engine | ✅ Complete | 100% |
-| Lab Intelligence Engine | ⏳ Planned | 0% |
+| Lab Intelligence Engine | ✅ Complete | 100% |
 | Nutrition Intelligence Engine | ⏳ Planned | 0% |
 | Recommendation Engine | ⏳ Planned | 0% |
 | AI Coach | ⏳ Planned | 0% |
@@ -204,6 +204,22 @@ Components
 
 ---
 
+# Model 3 — Lab Intelligence Engine (OCR)
+
+## Objective
+
+Extract clinical biomarkers from medical lab reports using Optical Character Recognition (OCR) and map them to standard reference ranges.
+
+### Architecture
+
+**PaddleOCR End-to-End Pipeline**
+- **Document Analysis**: UVDoc, PP-LCNet (Dewarping & Layout analysis)
+- **Text Detection**: PP-OCRv6_medium_det (Bounding boxes)
+- **Orientation**: PP-LCNet_x1_0_textline_ori (Text alignment)
+- **Recognition**: PP-OCRv6_medium_rec (Text extraction)
+
+---
+
 # Tech Stack
 
 ## AI
@@ -294,7 +310,7 @@ venv\Scripts\activate
 # source venv/bin/activate
 
 pip install -r requirements.txt
-uvicorn app.main:app --reload
+uvicorn main:app --reload
 ```
 *Note: Make sure to set up your `.env` file in the backend directory according to `.env.example` if one exists.*
 
@@ -317,7 +333,7 @@ Clinical Risk Engine          ██████████ 100%
 
 Cycle Intelligence Engine     ██████████ 100%
 
-Lab Intelligence Engine       ░░░░░░░░░░ 0%
+Lab Intelligence Engine       ██████████ 100%
 
 Nutrition Engine              ░░░░░░░░░░ 0%
 
@@ -336,12 +352,12 @@ Clinician Summary             ░░░░░░░░░░ 0%
 
 - Clinical Risk Prediction
 - Cycle Intelligence
+- Lab Intelligence Engine
 - Backend APIs
 - Frontend Dashboard
 
 ### Phase 2
 
-- Lab Intelligence Engine
 - Nutrition Engine
 - Recommendation Engine
 
