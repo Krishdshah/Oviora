@@ -12,13 +12,12 @@ export function LabAnalyzerUploadZone({
   onFileUpload,
 }: LabAnalyzerUploadZoneProps) {
   const triggerUpload = () => {
-    const input = document.getElementById("lab-file-input");
-    input?.click();
+    document.getElementById("lab-file-input")?.click();
   };
 
   return (
     <>
-      <section className="mb-sm">
+      <section className="mb-10">
         <input
           id="lab-file-input"
           type="file"
@@ -29,59 +28,144 @@ export function LabAnalyzerUploadZone({
 
         <div
           onClick={triggerUpload}
-          className="bg-white rounded-[32px] p-xl text-center border-2 border-dashed border-primary-fixed hover:border-primary/50 transition-all duration-300 group cursor-pointer relative overflow-hidden shadow-sm"
+          className="
+            relative
+            w-full
+            min-h-[500px]
+            rounded-[32px]
+            border-2
+            border-dashed
+            border-orange-300
+            bg-white
+            shadow-sm
+            hover:shadow-lg
+            hover:border-orange-500
+            transition-all
+            duration-300
+            cursor-pointer
+            overflow-hidden
+            flex
+            items-center
+            justify-center
+            px-8
+            py-14
+          "
         >
-          <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-transparent via-primary-container to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-          <div className="flex flex-col items-center w-full max-w-lg mx-auto">
-            <div className="w-20 h-20 mb-lg rounded-full bg-primary-container/10 flex items-center justify-center relative text-primary">
-              <span className="material-symbols-outlined text-[40px] group-hover:scale-110 transition-transform">
-                upload_file
-              </span>
-              <div className="absolute -top-1 -right-1 bg-primary text-white w-6 h-6 rounded-full flex items-center justify-center shadow-lg border-2 border-white">
-                <span className="material-symbols-outlined text-[12px]">auto_awesome</span>
+          <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-transparent via-orange-300 to-transparent opacity-0 hover:opacity-100 transition-opacity" />
+
+          <div className="w-full max-w-2xl flex flex-col items-center text-center">
+
+            {/* Upload Icon */}
+            <div className="relative mb-8">
+              <div className="w-28 h-28 rounded-full bg-orange-50 flex items-center justify-center">
+                <span className="material-symbols-outlined text-[56px] text-orange-600">
+                  upload_file
+                </span>
+              </div>
+
+              <div className="absolute -top-1 -right-1 w-8 h-8 rounded-full bg-orange-600 flex items-center justify-center border-4 border-white">
+                <span className="material-symbols-outlined text-white text-[16px]">
+                  auto_awesome
+                </span>
               </div>
             </div>
 
-            <h3 className="w-full font-title-section text-title-card font-semibold text-on-surface mb-xs">
+            {/* Heading */}
+            <h2 className="text-4xl font-bold text-gray-900 mb-4 w-full">
               {uploading
                 ? "Extracting Lab Metrics..."
                 : fileName
-                ? `Selected: ${fileName}`
+                ? fileName
                 : "Upload Your Blood Report"}
-            </h3>
-            <p className="w-full text-[13px] text-on-surface-variant mb-lg leading-relaxed">
+            </h2>
+
+            {/* Description */}
+            <p
+              className="
+                w-full
+                max-w-xl
+                mx-auto
+                text-base
+                leading-7
+                text-gray-500
+                mb-10
+              "
+            >
               {uploading
-                ? "Our clinical parser is reading the PDF markers..."
-                : "Drag and drop your blood test results or click to browse. We support PDF, JPG, and PNG formats."}
+                ? "Our AI engine is securely extracting hormone markers from your report."
+                : "Drag & drop your blood report here or choose a PDF, JPG or PNG file to begin AI-powered hormone analysis."}
             </p>
 
-            <div className="flex flex-wrap justify-center gap-sm w-full">
-              <button className="flex items-center gap-xs bg-primary hover:bg-primary/95 text-on-primary px-xl py-md rounded-xl font-bold text-label-caps text-[11px] shadow-md transition-all active:scale-95">
-                <span className="material-symbols-outlined text-[16px]">picture_as_pdf</span>
+            {/* Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+
+              <button
+                type="button"
+                className="
+                  flex
+                  items-center
+                  gap-2
+                  rounded-xl
+                  bg-orange-600
+                  px-7
+                  py-3
+                  text-white
+                  font-semibold
+                  hover:bg-orange-700
+                  transition
+                "
+              >
+                <span className="material-symbols-outlined">
+                  picture_as_pdf
+                </span>
                 Choose File
               </button>
-              <button className="flex items-center gap-xs bg-surface-container-high text-on-surface-variant px-xl py-md rounded-xl font-bold text-label-caps text-[11px] hover:bg-surface-variant transition-all active:scale-95">
-                <span className="material-symbols-outlined text-[16px]">photo_camera</span>
+
+              <button
+                type="button"
+                className="
+                  flex
+                  items-center
+                  gap-2
+                  rounded-xl
+                  border
+                  border-gray-300
+                  bg-gray-50
+                  px-7
+                  py-3
+                  text-gray-700
+                  font-semibold
+                  hover:bg-gray-100
+                  transition
+                "
+              >
+                <span className="material-symbols-outlined">
+                  photo_camera
+                </span>
                 Scan Document
               </button>
+
             </div>
 
-            <div className="mt-xl flex items-center gap-xs text-[10px] font-label-caps text-on-surface-variant/70">
-              <span className="material-symbols-outlined text-[14px]">lock</span>
-              HIPAA Compliant & Secure Private Data Processing
+            {/* Footer */}
+            <div className="mt-8 flex items-center gap-2 text-sm text-gray-500">
+              <span className="material-symbols-outlined text-base">
+                lock
+              </span>
+              HIPAA Compliant • Secure • Private Data Processing
             </div>
           </div>
         </div>
       </section>
 
-      {/* Simulated parser loading state */}
       {uploading && (
-        <div className="py-md text-center flex flex-col items-center gap-sm animate-pulse bg-surface-container-low/30 rounded-2xl border border-outline-variant/10">
-          <span className="material-symbols-outlined text-[36px] text-primary animate-spin">
+        <div className="rounded-2xl border border-orange-100 bg-orange-50 py-8 flex flex-col items-center gap-4">
+          <span className="material-symbols-outlined text-4xl text-orange-600 animate-spin">
             progress_activity
           </span>
-          <p className="text-[13px] font-semibold text-primary">
-            Reading endocrine panels. Matching hormones...
+
+          <p className="text-orange-700 font-semibold">
+            Reading endocrine panels and extracting biomarkers...
           </p>
         </div>
       )}

@@ -459,7 +459,7 @@ def predict(
 
     # ── Write to output/prediction.json ──────────────────────────────────────
     out_path = OUTPUT_DIR / "prediction.json"
-    out_path.write_text(json.dumps(output, indent=2, ensure_ascii=False))
+    out_path.write_text(json.dumps(output, indent=2, ensure_ascii=False), encoding="utf-8")
 
     return output
 
