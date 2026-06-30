@@ -17,9 +17,14 @@ os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 import json
 import pickle
 import numpy as np
-import matplotlib
-matplotlib.use("Agg")
-import matplotlib.pyplot as plt
+try:
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    MATPLOTLIB_AVAILABLE = True
+except ImportError:
+    MATPLOTLIB_AVAILABLE = False
+
 from pathlib import Path
 from datetime import datetime, timedelta
 
@@ -359,25 +364,29 @@ def predict(
         })
 
     # ── Save SHAP bar chart ───────────────────────────────────────────────────
-    contrib = shap_values[top_idx[:4]]
-    names   = [_readable_feature(feature_names[i]) for i in top_idx[:4]]
-    colors  = ["#C084FC" if c >= 0 else "#818CF8" for c in contrib]
-    fig, ax = plt.subplots(figsize=(9, 4))
-    ax.barh(names[::-1], contrib[::-1], color=colors[::-1], edgecolor="none")
-    ax.axvline(x=0, color="white", linewidth=0.8, alpha=0.5)
-    ax.set_facecolor("#0F0A1E")
-    fig.patch.set_facecolor("#0F0A1E")
-    ax.tick_params(colors="white")
-    ax.xaxis.label.set_color("white")
-    ax.title.set_color("white")
-    ax.set_xlabel("SHAP Impact (Days)")
-    ax.set_title("OvulAI — Feature Contribution (CatBoost SHAP)")
-    for spine in ax.spines.values():
-        spine.set_edgecolor("#2D1B69")
-    fig.tight_layout()
     shap_path = FIGURE_DIR / "shap_local_impact.png"
-    fig.savefig(shap_path, dpi=150)
-    plt.close(fig)
+    if MATPLOTLIB_AVAILABLE:
+        try:
+            contrib = shap_values[top_idx[:4]]
+            names   = [_readable_feature(feature_names[i]) for i in top_idx[:4]]
+            colors  = ["#C084FC" if c >= 0 else "#818CF8" for c in contrib]
+            fig, ax = plt.subplots(figsize=(9, 4))
+            ax.barh(names[::-1], contrib[::-1], color=colors[::-1], edgecolor="none")
+            ax.axvline(x=0, color="white", linewidth=0.8, alpha=0.5)
+            ax.set_facecolor("#0F0A1E")
+            fig.patch.set_facecolor("#0F0A1E")
+            ax.tick_params(colors="white")
+            ax.xaxis.label.set_color("white")
+            ax.title.set_color("white")
+            ax.set_xlabel("SHAP Impact (Days)")
+            ax.set_title("OvulAI — Feature Contribution (CatBoost SHAP)")
+            for spine in ax.spines.values():
+                spine.set_edgecolor("#2D1B69")
+            fig.tight_layout()
+            fig.savefig(shap_path, dpi=150)
+            plt.close(fig)
+        except Exception as e:
+            print(f"Warning: Failed to generate SHAP plot: {e}")
 
     # ── Confidence ───────────────────────────────────────────────────────────
     model_std          = float(np.std([xgb_pred, lgb_pred, cb_pred]))
