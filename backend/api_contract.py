@@ -65,3 +65,17 @@ class CyclePredictResponse(BaseModel):
     recommendation_context: Dict[str, bool]
     engine_version: str
     model_version: str
+
+class ClinicalRiskPredictRequest(BaseModel):
+    features: Dict[str, float] = Field(..., description="Dictionary of clinical features mapping to schema")
+
+class ClinicalRiskPredictResponse(BaseModel):
+    risk_score: float
+    risk_level: str
+    factors: List[str]
+
+class HormoneAnalysisResponse(BaseModel):
+    success: bool = True
+    error: Optional[str] = None
+    data: Optional[Dict[str, Any]] = None
+    message: Optional[str] = None

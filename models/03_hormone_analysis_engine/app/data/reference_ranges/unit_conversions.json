@@ -1,0 +1,77 @@
+{
+  "identity": {
+    "mIU/L": {
+      "uIU/mL": 1.0
+    },
+    "uIU/mL": {
+      "mIU/L": 1.0
+    },
+    "IU/L": {
+      "U/L": 1.0
+    },
+    "U/L": {
+      "IU/L": 1.0
+    },
+    "ug/dL": {
+      "µg/dL": 1.0
+    },
+    "µg/dL": {
+      "ug/dL": 1.0
+    },
+    "umol/L": {
+      "µmol/L": 1.0
+    },
+    "µmol/L": {
+      "umol/L": 1.0
+    }
+  },
+  "Fasting Glucose": {
+    "mg/dL_to_mmol/L": 0.0555,
+    "mmol/L_to_mg/dL": 18.0182
+  },
+  "Random Glucose": {
+    "mg/dL_to_mmol/L": 0.0555,
+    "mmol/L_to_mg/dL": 18.0182
+  },
+  "Total Cholesterol": {
+    "mg/dL_to_mmol/L": 0.02586,
+    "mmol/L_to_mg/dL": 38.67
+  },
+  "HDL": {
+    "mg/dL_to_mmol/L": 0.02586,
+    "mmol/L_to_mg/dL": 38.67
+  },
+  "LDL": {
+    "mg/dL_to_mmol/L": 0.02586,
+    "mmol/L_to_mg/dL": 38.67
+  },
+  "Triglycerides": {
+    "mg/dL_to_mmol/L": 0.01129,
+    "mmol/L_to_mg/dL": 88.57
+  },
+  "Vitamin D": {
+    "ng/mL_to_nmol/L": 2.496,
+    "nmol/L_to_ng/mL": 0.4006
+  },
+  "Testosterone": {
+    "ng/dL_to_nmol/L": 0.0347,
+    "nmol/L_to_ng/dL": 28.818
+  },
+  "Iron": {
+    "µg/dL_to_µmol/L": 0.1791,
+    "µmol/L_to_µg/dL": 5.585
+  },
+  "Bilirubin": {
+    "mg/dL_to_µmol/L": 17.104,
+    "µmol/L_to_mg/dL": 0.0585
+  },
+  "metadata": {
+    "version": "1.0.0",
+    "description": "Laboratory unit conversions for Oviora Hormone Intelligence.",
+    "notes": [
+      "Apply only to the matching biomarker.",
+      "Do not convert hormones unless a validated conversion exists.",
+      "Preserve the original extracted unit alongside normalized values."
+    ]
+  }
+}

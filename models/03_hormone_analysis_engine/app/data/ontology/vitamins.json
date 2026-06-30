@@ -1,0 +1,110 @@
+{
+  "Vitamin D": {
+    "canonical_name": "Vitamin D",
+    "aliases": [
+      "Vitamin D",
+      "25 OH Vitamin D",
+      "25-Hydroxy Vitamin D",
+      "25(OH)D",
+      "Vit D"
+    ],
+    "category": "Vitamin",
+    "expected_units": [
+      "ng/mL",
+      "nmol/L"
+    ],
+    "importance": "High",
+    "required": false,
+    "clinical_significance": "Vitamin D deficiency is commonly observed in people with PCOS and may be associated with metabolic health."
+  },
+  "Vitamin B12": {
+    "canonical_name": "Vitamin B12",
+    "aliases": [
+      "Vitamin B12",
+      "Vit B12",
+      "Cobalamin"
+    ],
+    "category": "Vitamin",
+    "expected_units": [
+      "pg/mL"
+    ],
+    "importance": "Medium",
+    "required": false,
+    "clinical_significance": "Useful when evaluating fatigue, anemia, or monitoring long-term metformin therapy."
+  },
+  "Folate": {
+    "canonical_name": "Folate",
+    "aliases": [
+      "Folate",
+      "Folic Acid",
+      "Vitamin B9"
+    ],
+    "category": "Vitamin",
+    "expected_units": [
+      "ng/mL"
+    ],
+    "importance": "Medium",
+    "required": false,
+    "clinical_significance": "Supports red blood cell production and reproductive health."
+  },
+  "Ferritin": {
+    "canonical_name": "Ferritin",
+    "aliases": [
+      "Ferritin",
+      "Serum Ferritin"
+    ],
+    "category": "Iron Studies",
+    "expected_units": [
+      "ng/mL"
+    ],
+    "importance": "High",
+    "required": false,
+    "clinical_significance": "Reflects body iron stores and helps evaluate iron deficiency."
+  },
+  "Iron": {
+    "canonical_name": "Iron",
+    "aliases": [
+      "Iron",
+      "Serum Iron",
+      "Fe"
+    ],
+    "category": "Iron Studies",
+    "expected_units": [
+      "µg/dL",
+      "ug/dL"
+    ],
+    "importance": "Medium",
+    "required": false,
+    "clinical_significance": "Measures circulating iron concentration."
+  },
+  "TIBC": {
+    "canonical_name": "TIBC",
+    "aliases": [
+      "TIBC",
+      "Total Iron Binding Capacity"
+    ],
+    "category": "Iron Studies",
+    "expected_units": [
+      "µg/dL",
+      "ug/dL"
+    ],
+    "importance": "Low",
+    "required": false,
+    "clinical_significance": "Used with iron and ferritin to assess iron status."
+  },
+  "Transferrin Saturation": {
+    "canonical_name": "Transferrin Saturation",
+    "aliases": [
+      "Transferrin Saturation",
+      "% Saturation",
+      "TSAT"
+    ],
+    "category": "Iron Studies",
+    "expected_units": [
+      "%"
+    ],
+    "importance": "Low",
+    "required": false,
+    "clinical_significance": "Calculated indicator of available iron for erythropoiesis."
+  }
+}

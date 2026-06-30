@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, File, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="Oviora Backend API")
@@ -24,7 +24,10 @@ from api_contract import (
     PCOSCyclePredictRequest, 
     PCOSCyclePredictResponse,
     CyclePredictRequest,
-    CyclePredictResponse
+    CyclePredictResponse,
+    ClinicalRiskPredictRequest,
+    ClinicalRiskPredictResponse,
+    HormoneAnalysisResponse
 )
 
 # Dynamically import clinical risk engine
@@ -36,22 +39,41 @@ if os.path.exists(clinical_module_path):
     sys.modules[clinical_module_name] = clinical_inference
     clinical_spec.loader.exec_module(clinical_inference)
 
-@app.post("/api/v1/clinical-risk/predict")
-def predict_clinical_risk(payload: Dict[str, Any]):
+@app.post("/api/v1/clinical-risk/predict", response_model=ClinicalRiskPredictResponse)
+def predict_clinical_risk(payload: ClinicalRiskPredictRequest):
     if 'clinical_inference' in globals():
-        return clinical_inference.predict(payload)
+        return clinical_inference.predict(payload.features)
     return {"error": "Clinical risk engine not available"}
 
 # Dynamically import pcos cycle ovulation engine
-cycle_dir = os.path.join(os.path.dirname(__file__), '..', 'models', '09_pcos_cycle_ovulation_engine')
+cycle_dir = os.path.join(os.path.dirname(__file__), '..', 'models', '04_pcos_cycle_ovulation_engine')
 if cycle_dir not in sys.path:
     sys.path.insert(0, cycle_dir)
 
+import os
+from pathlib import Path
+
+current_cwd = os.getcwd()
 try:
+    os.chdir(cycle_dir)
     from v2_05_predict import predict as predict_pcos
+    import v2_05_predict
     from api import _parse_dynamic
+    
+    # Fix runtime paths inside the module to point to correct locations
+    v2_05_predict.PROCESSED_DIR = Path(cycle_dir) / "processed"
+    v2_05_predict.MODEL_DIR = Path(cycle_dir) / "models"
+    v2_05_predict.FIGURE_DIR = Path(cycle_dir) / "figures"
+    v2_05_predict.OUTPUT_DIR = Path(cycle_dir) / "output"
+    os.chdir(current_cwd)
 except ImportError as e:
+    os.chdir(current_cwd)
     print(f"Warning: Could not import PCOS cycle engine: {e}")
+    predict_pcos = None
+    _parse_dynamic = None
+except Exception as e:
+    os.chdir(current_cwd)
+    print(f"Warning: Exception while importing PCOS cycle engine: {e}")
     predict_pcos = None
     _parse_dynamic = None
 
@@ -96,3 +118,45 @@ def predict_standard_cycle(payload: CyclePredictRequest):
     if predict_std_cycle:
         return predict_std_cycle(payload.model_dump())
     return {"error": "Standard cycle engine not available"}
+
+# Dynamically import hormone analysis engine
+hormone_module_name = "hormone_inference"
+hormone_module_path = os.path.join(os.path.dirname(__file__), '..', 'models', '03_hormone_analysis_engine', 'inference.py')
+try:
+    if os.path.exists(hormone_module_path):
+        hormone_spec = importlib.util.spec_from_file_location(hormone_module_name, hormone_module_path)
+        hormone_inference = importlib.util.module_from_spec(hormone_spec)
+        sys.modules[hormone_module_name] = hormone_inference
+        hormone_spec.loader.exec_module(hormone_inference)
+except Exception as e:
+    print(f"Warning: Could not import hormone analysis engine: {e}")
+    # Remove from sys.modules if it was added before failure
+    if hormone_module_name in sys.modules:
+        del sys.modules[hormone_module_name]
+
+@app.post("/api/v1/labs/upload", response_model=HormoneAnalysisResponse)
+def upload_lab_report(file: UploadFile = File(...)):
+    if 'hormone_inference' not in globals():
+        return {"success": False, "error": "Hormone analysis engine not available"}
+    
+    try:
+        # Create uploads directory if not exists
+        uploads_dir = os.path.join(os.path.dirname(__file__), 'uploads')
+        os.makedirs(uploads_dir, exist_ok=True)
+        
+        file_path = os.path.join(uploads_dir, file.filename)
+        with open(file_path, "wb") as f:
+            f.write(file.file.read())
+            
+        result = hormone_inference.predict(file_path)
+        
+        # Optionally clean up the file
+        if os.path.exists(file_path):
+            os.remove(file_path)
+            
+        if "error" in result:
+            return {"success": False, "error": result["error"]}
+            
+        return {"success": True, "data": result}
+    except Exception as e:
+        return {"success": False, "error": str(e)}

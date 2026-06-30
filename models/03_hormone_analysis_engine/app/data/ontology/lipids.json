@@ -1,0 +1,115 @@
+{
+  "HDL": {
+    "canonical_name": "HDL",
+    "aliases": [
+      "HDL",
+      "HDL Cholesterol",
+      "High Density Lipoprotein",
+      "HDL-C"
+    ],
+    "category": "Lipid Profile",
+    "expected_units": [
+      "mg/dL",
+      "mmol/L"
+    ],
+    "importance": "High",
+    "required": false,
+    "clinical_significance": "Lower HDL levels may be associated with increased cardiometabolic risk."
+  },
+  "LDL": {
+    "canonical_name": "LDL",
+    "aliases": [
+      "LDL",
+      "LDL Cholesterol",
+      "Low Density Lipoprotein",
+      "LDL-C"
+    ],
+    "category": "Lipid Profile",
+    "expected_units": [
+      "mg/dL",
+      "mmol/L"
+    ],
+    "importance": "High",
+    "required": false,
+    "clinical_significance": "Elevated LDL cholesterol contributes to cardiovascular risk."
+  },
+  "VLDL": {
+    "canonical_name": "VLDL",
+    "aliases": [
+      "VLDL",
+      "Very Low Density Lipoprotein",
+      "VLDL Cholesterol"
+    ],
+    "category": "Lipid Profile",
+    "expected_units": [
+      "mg/dL"
+    ],
+    "importance": "Medium",
+    "required": false,
+    "clinical_significance": "Often estimated from triglyceride concentration."
+  },
+  "Total Cholesterol": {
+    "canonical_name": "Total Cholesterol",
+    "aliases": [
+      "Total Cholesterol",
+      "Cholesterol",
+      "Serum Cholesterol"
+    ],
+    "category": "Lipid Profile",
+    "expected_units": [
+      "mg/dL",
+      "mmol/L"
+    ],
+    "importance": "High",
+    "required": false,
+    "clinical_significance": "Overall cholesterol measurement used in cardiovascular risk assessment."
+  },
+  "Triglycerides": {
+    "canonical_name": "Triglycerides",
+    "aliases": [
+      "Triglycerides",
+      "TG",
+      "Serum Triglycerides"
+    ],
+    "category": "Lipid Profile",
+    "expected_units": [
+      "mg/dL",
+      "mmol/L"
+    ],
+    "importance": "High",
+    "required": false,
+    "clinical_significance": "Elevated triglycerides are common in insulin resistance and metabolic syndrome."
+  },
+  "Non-HDL Cholesterol": {
+    "canonical_name": "Non-HDL Cholesterol",
+    "aliases": [
+      "Non HDL",
+      "Non-HDL Cholesterol",
+      "Non HDL Cholesterol"
+    ],
+    "category": "Derived",
+    "expected_units": [
+      "mg/dL"
+    ],
+    "importance": "Medium",
+    "required": false,
+    "derived": true,
+    "clinical_significance": "Calculated by subtracting HDL from total cholesterol."
+  },
+  "Cholesterol/HDL Ratio": {
+    "canonical_name": "Cholesterol/HDL Ratio",
+    "aliases": [
+      "TC/HDL Ratio",
+      "Cholesterol HDL Ratio",
+      "Total Cholesterol/HDL Ratio"
+    ],
+    "category": "Derived",
+    "expected_units": [
+      "ratio"
+    ],
+    "importance": "Medium",
+    "required": false,
+    "derived": true,
+    "clinical_significance": "Derived indicator of cardiovascular risk."
+  }
+}
