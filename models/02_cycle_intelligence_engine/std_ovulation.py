@@ -1,4 +1,4 @@
-from config import DEFAULT_LUTEAL_PHASE
+from std_config import DEFAULT_LUTEAL_PHASE
 
 def estimate_ovulation(predicted_cycle_length: int) -> int:
     """
