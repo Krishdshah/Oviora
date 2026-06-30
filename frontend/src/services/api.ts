@@ -205,18 +205,25 @@ export const apiService = {
     try {
       const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
       
-      // We will send mock profile data to the engine for now,
-      // this should eventually come from the user's actual saved state.
-      const payload = {
+      const hasPCOS = !!mockProfile.diagnosedYear;
+      const endpoint = hasPCOS ? '/api/v1/pcos-cycle/predict' : '/api/v1/cycle/predict';
+      
+      const payload: any = {
         last_period_start_date: "2026-06-15",
         age: mockProfile.age,
-        height: 165.0,
+        height: 165.0, // using default
         weight: 65.0,
         bmi: 23.9,
         previous_cycle_lengths: [30, 29, 31, 28, 30]
       };
+
+      if (hasPCOS) {
+        payload.pcos_diagnosed = true;
+        payload.sleep_hours = 6.5;
+        payload.stress_score = 5.0;
+      }
       
-      const response = await fetch(`${baseUrl}/api/v1/cycle/predict`, {
+      const response = await fetch(`${baseUrl}${endpoint}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
@@ -230,14 +237,14 @@ export const apiService = {
       
       // Map backend response to frontend interface
       return {
-        currentDay: data.cycle_day,
+        currentDay: data.cycle_day || data.cycle_day_today || 6,
         totalDays: data.predicted_cycle_length,
-        phase: data.phase,
-        phaseRemainingDays: data.days_until_next_period, // Approximation for frontend display
-        estrogen: data.hormones.estrogen,
-        progesterone: data.hormones.progesterone,
-        lh: data.hormones.lh,
-        fsh: data.hormones.fsh
+        phase: data.phase || "Follicular",
+        phaseRemainingDays: data.days_until_next_period || 6,
+        estrogen: data.hormones?.estrogen || 120,
+        progesterone: data.hormones?.progesterone || 0.8,
+        lh: data.hormones?.lh || 8.5,
+        fsh: data.hormones?.fsh || 6.2
       } as CycleData;
       
     } catch (error) {

@@ -8,11 +8,11 @@ MODEL_DIR = os.path.join(os.path.dirname(__file__), 'models')
 MODEL_PATH = os.path.join(MODEL_DIR, 'cycle_length_model.pkl')
 FEATURES_PATH = os.path.join(MODEL_DIR, 'feature_columns.pkl')
 
+import joblib
+
 try:
-    with open(MODEL_PATH, 'rb') as f:
-        model = pickle.load(f)
-    with open(FEATURES_PATH, 'rb') as f:
-        feature_columns = pickle.load(f)
+    model = joblib.load(MODEL_PATH)
+    feature_columns = joblib.load(FEATURES_PATH)
 except Exception as e:
     print(f"Warning: Could not load cycle length model: {e}")
     model = None
@@ -86,7 +86,7 @@ def predict_cycle_length(
     prediction = model.predict(features)[0]
     
     # Bound the prediction between reasonable limits (e.g., 21 to 45)
-    from .config import MIN_CYCLE_LENGTH, MAX_CYCLE_LENGTH
+    from std_config import MIN_CYCLE_LENGTH, MAX_CYCLE_LENGTH
     bounded_prediction = max(MIN_CYCLE_LENGTH, min(MAX_CYCLE_LENGTH, int(round(prediction))))
     
     return bounded_prediction

@@ -1,6 +1,6 @@
 from typing import Dict, Any, List
 import numpy as np
-from .config import ENGINE_VERSION, MODEL_VERSION
+from std_config import ENGINE_VERSION, MODEL_VERSION
 
 def build_response(
     cycle_day: int,

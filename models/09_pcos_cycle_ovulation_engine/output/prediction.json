@@ -1,0 +1,101 @@
+{
+  "predicted_cycle_length": 17.58,
+  "prediction_confidence_score": 0.11,
+  "confidence_percent": 11,
+  "risk_level": "Highly Irregular",
+  "risk_score": 0.9,
+  "risk_color": "#EF4444",
+  "risk_description": "High model uncertainty — prediction should be used with caution.",
+  "ovulation_day_of_cycle": 10,
+  "fertile_window_days": "Days 5 to 11",
+  "last_period_start_date": "2026-06-15",
+  "estimated_next_period_date": "2026-07-03",
+  "estimated_ovulation_date": "2026-06-25",
+  "fertile_window_dates": "2026-06-20 to 2026-06-26",
+  "days_until_ovulation": -6,
+  "days_until_next_period": 2,
+  "cycle_day_today": 16,
+  "cycle_regularity": "Irregular",
+  "pcos_profile_status": "PCOS Confirmed",
+  "why_this_prediction": "The strongest signal is your **PCOS diagnosis**, increasing the predicted cycle length by ~0.6 days. Your **longest recent cycle** is also influential, nudging the estimate decreasing by ~0.1 days. Additionally, your **longest recent cycle** contributes a smaller downward adjustment of ~0.1 days. PCOS typically introduces higher cycle variability, which is reflected in the model's confidence interval.",
+  "top_contributing_features": [
+    {
+      "feature": "pcos_diagnosed",
+      "label": "PCOS diagnosis",
+      "shap_value": 0.576,
+      "direction": "positive"
+    },
+    {
+      "feature": "rolling_max_10 [t-0]",
+      "label": "longest recent cycle",
+      "shap_value": -0.089,
+      "direction": "negative"
+    },
+    {
+      "feature": "rolling_max [t-0]",
+      "label": "longest recent cycle",
+      "shap_value": -0.076,
+      "direction": "negative"
+    },
+    {
+      "feature": "rolling_mean_10 [t-0]",
+      "label": "historical cycle average",
+      "shap_value": -0.069,
+      "direction": "negative"
+    },
+    {
+      "feature": "ema_cycle [t-0]",
+      "label": "ema cycle",
+      "shap_value": -0.054,
+      "direction": "negative"
+    },
+    {
+      "feature": "ema_cycle [t-2]",
+      "label": "ema cycle",
+      "shap_value": -0.05,
+      "direction": "negative"
+    }
+  ],
+  "recommendations": [
+    {
+      "category": "Cycle Tracking",
+      "message": "Track LH surge starting Day 8 using an OPK kit.",
+      "priority": "high",
+      "icon": "📅"
+    },
+    {
+      "category": "PCOS Management",
+      "message": "Maintain a low-GI diet and regular light exercise to support hormonal balance.",
+      "priority": "high",
+      "icon": "🩺"
+    },
+    {
+      "category": "Medical Follow-up",
+      "message": "Irregular cycles detected. Consult a gynaecologist if pattern persists beyond 3 cycles.",
+      "priority": "high",
+      "icon": "🏥"
+    },
+    {
+      "category": "Monitoring",
+      "message": "Log any spotting or mid-cycle bleeding — it may indicate anovulation.",
+      "priority": "medium",
+      "icon": "📝"
+    },
+    {
+      "category": "Sleep",
+      "message": "You averaged 6.5h of sleep. Aim for 7–8 hours — poor sleep disrupts LH and FSH secretion.",
+      "priority": "medium",
+      "icon": "🌙"
+    }
+  ],
+  "model_predictions_breakdown": {
+    "XGBoost": 1.66,
+    "LightGBM": 27.29,
+    "CatBoost": 27.85,
+    "Stacked_Ensemble": 17.58
+  },
+  "model_agreement_std": 12.219,
+  "shap_plot": "C:\\Users\\Krish D Shah\\Desktop\\krishdocs\\projects\\hackathons\\Oviora\\backend\\..\\models\\09_pcos_cycle_ovulation_engine\\figures\\shap_local_impact.png",
+  "generated_at": "2026-06-30T21:42:27.609552",
+  "engine": "OvulAI v3 — Stacked Ensemble (XGB + LGBM + CatBoost + Ridge Meta)"
+}
