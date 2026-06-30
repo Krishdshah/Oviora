@@ -259,25 +259,54 @@ https://www.kaggle.com/datasets/echekwuelijah/fertility-and-menstrual-health-dat
 
 # Repository Structure
 
-```
+```text
 Oviora/
-
-backend/
-
-frontend/
-
-ai/
-
-01_clinical_risk_engine/
-
-02_cycle_intelligence_engine/
-
-docs/
-
-datasets/
-
-artifacts/
+├── backend/       # FastAPI monolith backend
+├── frontend/      # Next.js React frontend
+├── models/        # AI models and training notebooks
+└── docs/          # Documentation and assets
 ```
+
+---
+
+# Getting Started
+
+## Prerequisites
+- Node.js 18+
+- Python 3.9+
+- PostgreSQL (if applicable)
+
+## Installation & Running
+
+### 1. Clone the repository
+```bash
+git clone https://github.com/Krishdshah/Oviora.git
+cd Oviora
+```
+
+### 2. Start the Backend (FastAPI)
+```bash
+cd backend
+python -m venv venv
+# On Windows
+venv\Scripts\activate
+# On Unix or MacOS
+# source venv/bin/activate
+
+pip install -r requirements.txt
+uvicorn app.main:app --reload
+```
+*Note: Make sure to set up your `.env` file in the backend directory according to `.env.example` if one exists.*
+
+### 3. Start the Frontend (Next.js)
+Open a new terminal window:
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+The frontend will be available at `http://localhost:3000` and the backend API at `http://localhost:8000`.
 
 ---
 
