@@ -110,9 +110,49 @@ Responsible for OCR parsing and AI analysis of laboratory test reports.
   ```
 ---
 
+### Personalized Nutrition Recommendation Engine (PNRE-v1.0)
+Uses LightGBM LambdaMART ranking and SHAP explainability combined with Groq LLM to rank clinical foods and generate customized, cuisine-aware daily meal plans.
+
+#### `POST /api/v1/recommend/rank`
+- **Description**: Computes dynamic personalized food rankings based on basic symptoms or advanced clinical lab profiles.
+- **Request Body**: `NutritionRankRequest`
+- **Response**: `200 OK` (`NutritionRankResponse`)
+  ```json
+  {
+    "patient_profile": { ... },
+    "recommendations": [
+      {
+        "food_id": 12,
+        "food_name": "Spinach",
+        "category": "Meal/Vegetable",
+        "calories": 23.0,
+        "protein": 2.9,
+        "carbs": 3.6,
+        "fat": 0.4,
+        "fiber": 2.2,
+        "glycemic_index": 15.0,
+        "pcos_friendliness_score": 88.5,
+        "ranking_score": 2.45,
+        "is_avoided": false,
+        "explanation": "Dietary fiber (+0.45) supports stable glucose levels."
+      }
+    ]
+  }
+  ```
+
+#### `POST /api/v1/recommend/meal-plan`
+- **Description**: Generates multi-day, cuisine-filtered personalized meal plans, grocery shopping lists, and clinical explanations using Llama 3.3 or Mixtral models.
+- **Request Body**: `MealPlanRequest`
+- **Response**: `200 OK` (`MealPlanResponse`)
+
+#### `GET /api/v1/knowledge-graph/food/{food_name}`
+- **Description**: Queries semantic node contextual details and relations from the NetworkX Knowledge Graph case-insensitively.
+- **Response**: `200 OK`
+
+---
+
 ### Future Engines
 - Lab Intelligence Engine (LIE-v1.0)
 - Vision Intelligence Engine (VIE-v1.0)
 - Recommendation Intelligence Engine (RIE-v1.0)
-- Nutrition Intelligence Engine (NIE-v1.0)
 - Conversational Medical Assistant (CMA-v1.0)

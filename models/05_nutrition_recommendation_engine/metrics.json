@@ -1,0 +1,7 @@
+{
+    "validation_ndcg_at_10": 1.0,
+    "model_type": "LightGBM LambdaMART Ranker",
+    "features_count": 25,
+    "training_samples": 216864,
+    "dataset_used": "Kaggle PCOS Clinical Dataset + Derived Food Feature Store"
+}

@@ -31,7 +31,11 @@ from api_contract import (
     CyclePredictResponse,
     ClinicalRiskPredictRequest,
     ClinicalRiskPredictResponse,
-    HormoneAnalysisResponse
+    HormoneAnalysisResponse,
+    NutritionRankRequest,
+    NutritionRankResponse,
+    MealPlanRequest,
+    MealPlanResponse
 )
 
 # Dynamically import clinical risk engine
@@ -42,6 +46,20 @@ if os.path.exists(clinical_module_path):
     clinical_inference = importlib.util.module_from_spec(clinical_spec)
     sys.modules[clinical_module_name] = clinical_inference
     clinical_spec.loader.exec_module(clinical_inference)
+
+# Dynamically import nutrition recommendation engine
+nutrition_module_name = "nutrition_inference"
+nutrition_module_path = os.path.join(os.path.dirname(__file__), '..', 'models', '05_nutrition_recommendation_engine', 'inference.py')
+try:
+    if os.path.exists(nutrition_module_path):
+        nutrition_spec = importlib.util.spec_from_file_location(nutrition_module_name, nutrition_module_path)
+        nutrition_inference = importlib.util.module_from_spec(nutrition_spec)
+        sys.modules[nutrition_module_name] = nutrition_inference
+        nutrition_spec.loader.exec_module(nutrition_inference)
+except Exception as e:
+    print(f"Warning: Could not import nutrition recommendation engine: {e}")
+    if nutrition_module_name in sys.modules:
+        del sys.modules[nutrition_module_name]
 
 @app.post("/api/v1/clinical-risk/predict", response_model=ClinicalRiskPredictResponse)
 def predict_clinical_risk(payload: ClinicalRiskPredictRequest):
@@ -164,3 +182,46 @@ def upload_lab_report(file: UploadFile = File(...)):
         return {"success": True, "data": result}
     except Exception as e:
         return {"success": False, "error": str(e)}
+
+# Personalized Nutrition Recommendation Engine (PNRE-v1.0) Endpoints
+@app.post("/api/v1/recommend/rank", response_model=NutritionRankResponse)
+def rank_foods(payload: NutritionRankRequest):
+    if 'nutrition_inference' not in globals() or not hasattr(nutrition_inference, 'predict_rank'):
+        from fastapi import HTTPException
+        raise HTTPException(status_code=503, detail="Nutrition recommendation engine not available")
+    
+    result = nutrition_inference.predict_rank(payload.model_dump())
+    if "error" in result:
+        from fastapi import HTTPException
+        raise HTTPException(status_code=400, detail=result["error"])
+    return result
+
+@app.post("/api/v1/recommend/meal-plan", response_model=MealPlanResponse)
+def generate_meal_plan(payload: MealPlanRequest):
+    if 'nutrition_inference' not in globals() or not hasattr(nutrition_inference, 'predict_meal_plan'):
+        from fastapi import HTTPException
+        raise HTTPException(status_code=503, detail="Nutrition recommendation engine not available")
+    
+    result = nutrition_inference.predict_meal_plan(
+        patient_data=payload.patient_data.model_dump(),
+        cuisine=payload.cuisine_preference,
+        duration=payload.duration_days,
+        budget=payload.budget,
+        model_name=payload.groq_model
+    )
+    if "error" in result:
+        from fastapi import HTTPException
+        raise HTTPException(status_code=400, detail=result["error"])
+    return result
+
+@app.get("/api/v1/knowledge-graph/food/{food_name}")
+def get_food_knowledge_graph(food_name: str):
+    if 'nutrition_inference' not in globals() or not hasattr(nutrition_inference, 'get_food_graph'):
+        from fastapi import HTTPException
+        raise HTTPException(status_code=503, detail="Nutrition recommendation engine not available")
+    
+    result = nutrition_inference.get_food_graph(food_name)
+    if "error" in result:
+        from fastapi import HTTPException
+        raise HTTPException(status_code=404, detail=result["error"])
+    return result
