@@ -1,43 +1,70 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { apiService, CycleData } from "@/services/api";
 import Link from "next/link";
 
 export default function CycleIntelligence() {
   const [cycle, setCycle] = useState<CycleData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [retryCount, setRetryCount] = useState(0);
+  const [backendStatus, setBackendStatus] = useState<"connecting" | "connected" | "error">("connecting");
+  const pollIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
+    let isMounted = true;
+
     async function loadData() {
       try {
+        setBackendStatus("connecting");
         const res = await apiService.getCycleData();
+        
+        if (!isMounted) return;
+        
         setCycle(res);
-      } catch (err) {
-        console.error("Failed to load cycle data", err);
-      } finally {
+        setBackendStatus("connected");
         setLoading(false);
+        
+        if (pollIntervalRef.current) {
+          clearInterval(pollIntervalRef.current);
+          pollIntervalRef.current = null;
+        }
+      } catch (err) {
+        if (!isMounted) return;
+        console.error("Failed to load cycle data. Retrying...", err);
+        setBackendStatus("error");
+        setRetryCount((prev) => prev + 1);
       }
     }
+    
     loadData();
+    pollIntervalRef.current = setInterval(loadData, 5000);
+
+    return () => {
+      isMounted = false;
+      if (pollIntervalRef.current) clearInterval(pollIntervalRef.current);
+    };
   }, []);
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="flex flex-col items-center gap-md">
-          <span className="material-symbols-outlined text-[48px] text-primary animate-spin">
-            progress_activity
-          </span>
-          <p className="font-label-caps text-on-surface-variant">Analyzing Ovulatory Telemetry...</p>
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="px-lg py-xl max-w-6xl mx-auto flex flex-col gap-lg">
+    <div className="px-lg py-xl max-w-6xl mx-auto flex flex-col gap-lg relative">
       
+      {/* Backend Connection Notification Banner */}
+      {backendStatus !== "connected" && (
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 animate-in slide-in-from-top-4 fade-in duration-300">
+          <div className="bg-surface border border-outline-variant/30 shadow-lg px-lg py-sm rounded-full flex items-center gap-sm">
+            <span className="material-symbols-outlined text-[18px] text-primary animate-spin">
+              progress_activity
+            </span>
+            <span className="font-label-caps text-[12px] font-bold text-on-surface-variant">
+              {retryCount > 1 
+                ? `Waking up Intelligence Engine (Attempt ${retryCount})...` 
+                : "Connecting to Clinical Backend..."}
+            </span>
+          </div>
+        </div>
+      )}
+
       {/* Page Header */}
       <section className="mb-sm">
         <div className="mb-xs">
@@ -54,7 +81,7 @@ export default function CycleIntelligence() {
       </section>
 
       {/* Cycle Visualization Section */}
-      <section className="flex flex-col lg:flex-row items-center gap-xl bg-white border border-outline-variant/20 rounded-[32px] p-xl shadow-sm mb-sm relative overflow-hidden">
+      <section className={`flex flex-col lg:flex-row items-center gap-xl bg-white border border-outline-variant/20 rounded-[32px] p-xl shadow-sm mb-sm relative overflow-hidden transition-opacity duration-500 ${loading ? 'opacity-60' : 'opacity-100'}`}>
         <div className="absolute top-[-30%] right-[-20%] w-[350px] h-[350px] bg-primary-fixed/20 blur-[100px] rounded-full -z-10 animate-pulse"></div>
         
         {/* The Wheel */}
@@ -136,16 +163,18 @@ export default function CycleIntelligence() {
               />
               
               {/* Current Day Indicator Dot */}
-              <circle
-                cx="50"
-                cy="6"
-                r="3"
-                className="fill-primary stroke-white stroke-[1px]"
-                style={{
-                  transform: "rotate(68deg)", // Dynamic rotation representation for day 6
-                  transformOrigin: "50% 50%",
-                }}
-              />
+              {cycle && (
+                <circle
+                  cx="50"
+                  cy="6"
+                  r="3"
+                  className="fill-primary stroke-white stroke-[1px]"
+                  style={{
+                    transform: "rotate(68deg)", // Dynamic rotation representation for day 6
+                    transformOrigin: "50% 50%",
+                  }}
+                />
+              )}
             </svg>
             
             {/* Center Text */}
@@ -154,10 +183,10 @@ export default function CycleIntelligence() {
                 Today
               </span>
               <span className="font-display-hero text-2xl font-bold text-primary my-0.5">
-                Day {cycle?.currentDay} of {cycle?.totalDays}
+                {cycle ? `Day ${cycle.currentDay} of ${cycle.totalDays}` : "--/--"}
               </span>
               <span className="font-body-main text-[12px] text-secondary font-bold">
-                {cycle?.phase} Phase
+                {cycle ? `${cycle.phase} Phase` : "Analyzing..."}
               </span>
             </div>
           </div>
@@ -175,7 +204,9 @@ export default function CycleIntelligence() {
                   AI Cycle Forecast
                 </h3>
                 <p className="text-[13px] text-on-surface-variant leading-relaxed mt-1">
-                  Your body is currently transitioning from your Menstrual bleed to your Follicular peak. Estrogen is rising to support follicular maturation.
+                  {cycle 
+                    ? "Your body is currently transitioning from your Menstrual bleed to your Follicular peak. Estrogen is rising to support follicular maturation."
+                    : "Connecting to intelligence engine..."}
                 </p>
               </div>
             </div>
@@ -203,14 +234,16 @@ export default function CycleIntelligence() {
           
           <div className="p-md rounded-2xl bg-primary-fixed/20 border border-primary-fixed/30 mt-sm">
             <p className="font-body-main text-[13px] italic text-primary leading-relaxed">
-              "Your low follicle stimulation risk and stable body temperature indicate a healthy progression. Expect energy to rise sequentially over the next 4 days."
+              {cycle
+                ? "\"Your low follicle stimulation risk and stable body temperature indicate a healthy progression. Expect energy to rise sequentially over the next 4 days.\""
+                : "Awaiting clinical insight generation..."}
             </p>
           </div>
         </div>
       </section>
 
       {/* Prediction Cards Grid (Bento Style) */}
-      <section className="grid grid-cols-1 md:grid-cols-3 gap-md mb-xs">
+      <section className={`grid grid-cols-1 md:grid-cols-3 gap-md mb-xs transition-opacity duration-500 ${loading ? 'opacity-60' : 'opacity-100'}`}>
         
         {/* Next Period Card */}
         <div className="bg-white border border-outline-variant/20 rounded-[24px] p-lg flex flex-col justify-between shadow-sm hover:-translate-y-1 transition-all duration-300">
@@ -220,7 +253,7 @@ export default function CycleIntelligence() {
             </div>
             <h4 className="font-title-card text-title-card font-semibold text-on-surface">Next Period</h4>
             <div className="flex items-baseline gap-xs">
-              <span className="text-4xl font-extrabold text-primary leading-none">22</span>
+              <span className="text-4xl font-extrabold text-primary leading-none">{cycle ? "22" : "--"}</span>
               <span className="font-label-caps text-[10px] text-on-surface-variant font-bold uppercase">Days Left</span>
             </div>
           </div>
@@ -242,7 +275,7 @@ export default function CycleIntelligence() {
             <h4 className="font-title-card text-title-card font-semibold text-on-surface">Fertility Window</h4>
             <div className="flex items-center">
               <span className="px-sm py-xs bg-primary-container text-white rounded-full font-label-caps text-[9px] font-bold">
-                EST. IN 6 DAYS
+                EST. IN {cycle ? "6" : "--"} DAYS
               </span>
             </div>
             <p className="text-[11px] text-on-surface-variant">Days 12 - 17 are highly fertile</p>
@@ -262,7 +295,7 @@ export default function CycleIntelligence() {
             </div>
             <h4 className="font-title-card text-title-card font-semibold text-on-surface">Ovulation Prob.</h4>
             <div className="flex items-baseline gap-xs">
-              <span className="text-4xl font-extrabold text-tertiary leading-none">84</span>
+              <span className="text-4xl font-extrabold text-tertiary leading-none">{cycle ? "84" : "--"}</span>
               <span className="font-label-caps text-[10px] text-on-surface-variant font-bold uppercase">%</span>
             </div>
           </div>

@@ -8,50 +8,33 @@ basic image preprocessing and PDF support.
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
-from typing import Any
+
+# Override HOME/USERPROFILE so PaddleX uses our local directory BEFORE imports
+_model_dir = Path(__file__).resolve().parent.parent.parent.parent.parent / "backend" / "models" / "paddleocr"
+_model_dir.mkdir(parents=True, exist_ok=True)
+os.environ["HOME"] = str(_model_dir)
+os.environ["USERPROFILE"] = str(_model_dir)
+os.environ["PADDLE_PDX_DISABLE_MODEL_SOURCE_CHECK"] = "True"
 
 import cv2
 import numpy as np
 from paddleocr import PaddleOCR
 from pdf2image import convert_from_path
 from PIL import Image
+from typing import Any
 
 from app.config import settings
 from app.logger import logger
 
-
 class OCRService:
     def __init__(self) -> None:
-        import os
-        from pathlib import Path
-        
-        # Override HOME/USERPROFILE so PaddleX uses our local directory
-        model_dir = Path(__file__).resolve().parent.parent.parent.parent.parent / "backend" / "models" / "paddleocr"
-        model_dir.mkdir(parents=True, exist_ok=True)
-        
-        orig_home = os.environ.get("HOME")
-        orig_userprofile = os.environ.get("USERPROFILE")
-        
-        os.environ["HOME"] = str(model_dir)
-        os.environ["USERPROFILE"] = str(model_dir)
-        
         self.ocr = PaddleOCR(
             use_textline_orientation=True,
             lang=settings.OCR_LANGUAGE,
             device="gpu" if settings.OCR_USE_GPU else "cpu",
         )
-        
-        # Restore environment variables
-        if orig_home is not None:
-            os.environ["HOME"] = orig_home
-        elif "HOME" in os.environ:
-            del os.environ["HOME"]
-            
-        if orig_userprofile is not None:
-            os.environ["USERPROFILE"] = orig_userprofile
-        elif "USERPROFILE" in os.environ:
-            del os.environ["USERPROFILE"]
 
     @staticmethod
     def preprocess(image: np.ndarray) -> np.ndarray:
