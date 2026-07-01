@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { apiService } from "@/services/api";
 import Link from "next/link";
 
@@ -24,19 +24,50 @@ interface DashboardData {
 export default function Dashboard() {
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
+  const [retryCount, setRetryCount] = useState(0);
+  const [backendStatus, setBackendStatus] = useState<"connecting" | "connected" | "error">("connecting");
+  const pollIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    async function loadData() {
+    let isMounted = true;
+
+    async function fetchDashboard() {
       try {
+        setBackendStatus("connecting");
         const res = await apiService.getDashboardData();
+        
+        if (!isMounted) return;
+        
+        // Success
         setData(res);
-      } catch (err) {
-        console.error("Failed to load dashboard data", err);
-      } finally {
+        setBackendStatus("connected");
         setLoading(false);
+        
+        // Stop polling on success
+        if (pollIntervalRef.current) {
+          clearInterval(pollIntervalRef.current);
+          pollIntervalRef.current = null;
+        }
+      } catch (err) {
+        if (!isMounted) return;
+        console.error("Failed to load dashboard data. Retrying...", err);
+        setBackendStatus("error");
+        setRetryCount((prev) => prev + 1);
       }
     }
-    loadData();
+
+    // Initial fetch
+    fetchDashboard();
+
+    // Start polling every 5 seconds until successful
+    pollIntervalRef.current = setInterval(fetchDashboard, 5000);
+
+    return () => {
+      isMounted = false;
+      if (pollIntervalRef.current) {
+        clearInterval(pollIntervalRef.current);
+      }
+    };
   }, []);
 
   const toggleTask = (taskId: string) => {
@@ -50,52 +81,51 @@ export default function Dashboard() {
     // TODO: Connect this to apiService.toggleDashboardTask(taskId) to save in backend
   };
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <div className="flex flex-col items-center gap-md">
-          <span className="material-symbols-outlined text-[48px] text-primary animate-spin">
-            progress_activity
-          </span>
-          <p className="font-label-caps text-on-surface-variant">Loading Hormonal Intelligence...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!data) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <p className="text-on-surface-variant">Failed to load data. Please refresh.</p>
-      </div>
-    );
-  }
-
-  const score = 78;
+  const score = data ? 78 : 0;
   const progressCircumference = 540;
   const strokeDashoffset = progressCircumference * (1 - score / 100);
 
   return (
-    <div className="px-lg py-xl max-w-7xl mx-auto flex flex-col gap-lg">
+    <div className="px-lg py-xl max-w-7xl mx-auto flex flex-col gap-lg relative">
       
+      {/* Backend Connection Notification Banner */}
+      {backendStatus !== "connected" && (
+        <div className="fixed top-4 left-1/2 -translate-x-1/2 z-50 animate-in slide-in-from-top-4 fade-in duration-300">
+          <div className="bg-surface border border-outline-variant/30 shadow-lg px-lg py-sm rounded-full flex items-center gap-sm">
+            <span className="material-symbols-outlined text-[18px] text-primary animate-spin">
+              progress_activity
+            </span>
+            <span className="font-label-caps text-[12px] font-bold text-on-surface-variant">
+              {retryCount > 1 
+                ? `Waking up Intelligence Engine (Attempt ${retryCount})...` 
+                : "Connecting to Clinical Backend..."}
+            </span>
+          </div>
+        </div>
+      )}
+
       {/* Welcome Hero Banner */}
       <section className="relative overflow-hidden hero-gradient rounded-[32px] p-xl flex flex-col md:flex-row items-center justify-between gap-xl border border-outline-variant/20 shadow-sm transition-all hover:shadow-md">
         <div className="absolute top-[-20%] right-[-10%] w-[300px] h-[300px] bg-primary-fixed/20 blur-[80px] rounded-full -z-10"></div>
         <div className="relative z-10 flex-1">
           <h2 className="font-display-hero text-[32px] md:text-[38px] text-primary font-bold mb-xs">
-            Good Morning, {data.profileName.split(" ")[0]}
+            Good Morning, {data?.profileName?.split(" ")[0] || "--"}
           </h2>
           <p className="font-body-main text-on-surface-variant text-lg max-w-2xl leading-relaxed">
-            Your health is improving this month. We noticed your sleep quality stabilized your cortisol levels and {data.todayFocus.toLowerCase()}
+            {data ? (
+              `Your health is improving this month. We noticed your sleep quality stabilized your cortisol levels and ${data.todayFocus.toLowerCase()}`
+            ) : (
+              "Loading your personalized hormonal insights and health updates..."
+            )}
           </p>
           <div className="mt-lg flex gap-sm flex-wrap">
             <span className="bg-white/60 backdrop-blur-sm border border-outline-variant/20 px-md py-base rounded-full text-primary font-label-caps text-[11px] flex items-center gap-xs shadow-sm">
               <span className="material-symbols-outlined text-[14px]">trending_up</span>
-              Improvement Streak: 12 Days
+              Improvement Streak: {data ? "12 Days" : "--"}
             </span>
             <span className="bg-white/60 backdrop-blur-sm border border-outline-variant/20 px-md py-base rounded-full text-on-surface-variant font-label-caps text-[11px] flex items-center gap-xs shadow-sm">
               <span className="material-symbols-outlined text-[14px]">water_drop</span>
-              Phase: {data.cycle.phase} (Day {data.cycle.currentDay})
+              Phase: {data?.cycle?.phase || "--"} (Day {data?.cycle?.currentDay || "--"})
             </span>
           </div>
         </div>
@@ -103,15 +133,15 @@ export default function Dashboard() {
           <div className="w-40 h-40 rounded-full bg-primary-container/20 absolute -z-10 blur-xl"></div>
           {/* Abstract wellness design representation using CSS instead of broken image URLs */}
           <div className="flex items-center justify-center gap-sm">
-            <div className="w-20 h-28 rounded-full bg-primary-container/40 blur-[2px] transform -rotate-12 animate-pulse"></div>
-            <div className="w-24 h-24 rounded-full bg-secondary-container/50 blur-[2px] transform rotate-12 -ml-8"></div>
-            <div className="w-16 h-28 rounded-full bg-tertiary-container/30 blur-[2px] transform -rotate-45 -ml-8"></div>
+            <div className={`w-20 h-28 rounded-full bg-primary-container/40 blur-[2px] transform -rotate-12 ${loading ? 'animate-pulse' : ''}`}></div>
+            <div className={`w-24 h-24 rounded-full bg-secondary-container/50 blur-[2px] transform rotate-12 -ml-8 ${loading ? 'animate-pulse delay-75' : ''}`}></div>
+            <div className={`w-16 h-28 rounded-full bg-tertiary-container/30 blur-[2px] transform -rotate-45 -ml-8 ${loading ? 'animate-pulse delay-150' : ''}`}></div>
           </div>
         </div>
       </section>
 
       {/* Bento Grid Layout */}
-      <div className="bento-grid">
+      <div className={`bento-grid transition-opacity duration-500 ${loading ? 'opacity-60' : 'opacity-100'}`}>
         
         {/* Card 1: PCOS Health Score */}
         <div className="col-span-12 lg:col-span-4 bg-white border border-outline-variant/20 rounded-[24px] shadow-sm p-lg flex flex-col items-center text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
@@ -152,14 +182,16 @@ export default function Dashboard() {
               </defs>
             </svg>
             <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <span className="text-4xl font-bold text-primary">{score}</span>
+              <span className="text-4xl font-bold text-primary">{data ? score : "--"}</span>
               <span className="text-[11px] font-label-caps text-on-surface-variant/70 uppercase">/100</span>
             </div>
           </div>
 
           <div className="bg-surface-container-low px-md py-sm rounded-full flex items-center gap-sm">
-            <span className="w-2.5 h-2.5 rounded-full bg-primary-container animate-pulse"></span>
-            <span className="font-label-caps text-[11px] text-primary font-bold">Status: Improving</span>
+            <span className={`w-2.5 h-2.5 rounded-full bg-primary-container ${loading ? 'animate-pulse' : ''}`}></span>
+            <span className="font-label-caps text-[11px] text-primary font-bold">
+              {data ? "Status: Improving" : "Analyzing..."}
+            </span>
           </div>
         </div>
 
@@ -168,12 +200,12 @@ export default function Dashboard() {
           <div className="flex justify-between items-start mb-lg gap-md">
             <div>
               <h3 className="font-title-card text-title-card text-on-surface font-semibold">Cycle Intelligence</h3>
-              <p className="text-text-secondary text-on-surface-variant mt-0.5">{data.cycle.phase} Phase</p>
+              <p className="text-text-secondary text-on-surface-variant mt-0.5">{data?.cycle?.phase || "--"} Phase</p>
             </div>
             <div className="text-right">
-              <div className="text-2xl font-bold text-primary">Day {data.cycle.currentDay} of {data.cycle.totalDays}</div>
+              <div className="text-2xl font-bold text-primary">Day {data?.cycle?.currentDay || "--"} of {data?.cycle?.totalDays || "--"}</div>
               <p className="text-[12px] text-on-surface-variant mt-0.5">
-                Ovulation Predicted: <span className="text-primary font-bold">in 8 days</span>
+                Ovulation Predicted: <span className="text-primary font-bold">{data ? "in 8 days" : "--"}</span>
               </p>
             </div>
           </div>
@@ -187,15 +219,19 @@ export default function Dashboard() {
             </div>
             <div className="h-4 w-full bg-surface-container-low rounded-full overflow-hidden flex border border-outline-variant/15 p-0.5">
               <div className="h-full bg-primary-fixed-dim/40 rounded-full" style={{ width: "18%" }}></div>
-              <div className="h-full bg-primary-container rounded-full relative ml-1" style={{ width: "35%" }}>
-                <div className="absolute top-0 right-1 w-2.5 h-2.5 bg-white rounded-full animate-ping"></div>
-                <div className="absolute top-0.5 right-1.5 w-1.5 h-1.5 bg-white rounded-full"></div>
+              <div className="h-full bg-primary-container rounded-full relative ml-1" style={{ width: data ? "35%" : "0%", transition: "width 1s ease" }}>
+                {data && (
+                  <>
+                    <div className="absolute top-0 right-1 w-2.5 h-2.5 bg-white rounded-full animate-ping"></div>
+                    <div className="absolute top-0.5 right-1.5 w-1.5 h-1.5 bg-white rounded-full"></div>
+                  </>
+                )}
               </div>
               <div className="h-full bg-surface-container-low rounded-full ml-1" style={{ width: "47%" }}></div>
             </div>
             <div className="flex justify-between mt-1 px-1">
               <span className="text-[10px] text-on-surface-variant/60">Days 1-5</span>
-              <span className="text-[10px] text-primary font-bold">Today: Day {data.cycle.currentDay}</span>
+              <span className="text-[10px] text-primary font-bold">Today: Day {data?.cycle?.currentDay || "--"}</span>
               <span className="text-[10px] text-on-surface-variant/60">Days 12-28</span>
             </div>
           </div>
@@ -203,7 +239,9 @@ export default function Dashboard() {
           <div className="p-md bg-surface-container-low rounded-2xl flex items-start gap-md mt-sm border border-outline-variant/10">
             <span className="material-symbols-outlined text-primary mt-0.5">flare</span>
             <p className="text-[13px] text-on-surface-variant leading-relaxed">
-              Your estrogen is rising. This stabilizes energy and mood. Consider scheduling high-energy tasks, resistance training, and complex discussions.
+              {data 
+                ? "Your estrogen is rising. This stabilizes energy and mood. Consider scheduling high-energy tasks, resistance training, and complex discussions." 
+                : "Loading phase insights..."}
             </p>
           </div>
         </div>
@@ -221,44 +259,44 @@ export default function Dashboard() {
             <div className="p-md bg-surface-container-low/40 rounded-xl border border-outline-variant/10 flex flex-col justify-between">
               <span className="text-[11px] font-label-caps text-on-surface-variant/70">ESTROGEN</span>
               <div className="flex items-baseline gap-xs mt-xs">
-                <span className="text-2xl font-bold text-on-surface">{data.cycle.estrogen}</span>
+                <span className="text-2xl font-bold text-on-surface">{data?.cycle?.estrogen || "--"}</span>
                 <span className="text-[11px] text-on-surface-variant">pg/mL</span>
               </div>
               <span className="text-[10px] text-primary font-bold mt-sm flex items-center gap-xs">
-                <span className="material-symbols-outlined text-[12px]">trending_up</span> Rising
+                <span className="material-symbols-outlined text-[12px]">trending_up</span> {data ? "Rising" : "--"}
               </span>
             </div>
             
             <div className="p-md bg-surface-container-low/40 rounded-xl border border-outline-variant/10 flex flex-col justify-between">
               <span className="text-[11px] font-label-caps text-on-surface-variant/70">PROGESTERONE</span>
               <div className="flex items-baseline gap-xs mt-xs">
-                <span className="text-2xl font-bold text-on-surface">{data.cycle.progesterone}</span>
+                <span className="text-2xl font-bold text-on-surface">{data?.cycle?.progesterone || "--"}</span>
                 <span className="text-[11px] text-on-surface-variant">ng/mL</span>
               </div>
               <span className="text-[10px] text-on-surface-variant/60 mt-sm flex items-center gap-xs">
-                <span className="material-symbols-outlined text-[12px]">horizontal_rule</span> Baseline Low
+                <span className="material-symbols-outlined text-[12px]">horizontal_rule</span> {data ? "Baseline Low" : "--"}
               </span>
             </div>
 
             <div className="p-md bg-surface-container-low/40 rounded-xl border border-outline-variant/10 flex flex-col justify-between">
               <span className="text-[11px] font-label-caps text-on-surface-variant/70">LH LEVELS</span>
               <div className="flex items-baseline gap-xs mt-xs">
-                <span className="text-2xl font-bold text-on-surface">{data.cycle.lh}</span>
+                <span className="text-2xl font-bold text-on-surface">{data?.cycle?.lh || "--"}</span>
                 <span className="text-[11px] text-on-surface-variant">mIU/mL</span>
               </div>
               <span className="text-[10px] text-on-surface-variant/60 mt-sm flex items-center gap-xs">
-                <span className="material-symbols-outlined text-[12px]">check_circle</span> Normal Baseline
+                <span className="material-symbols-outlined text-[12px]">check_circle</span> {data ? "Normal Baseline" : "--"}
               </span>
             </div>
 
             <div className="p-md bg-surface-container-low/40 rounded-xl border border-outline-variant/10 flex flex-col justify-between">
               <span className="text-[11px] font-label-caps text-on-surface-variant/70">FSH LEVELS</span>
               <div className="flex items-baseline gap-xs mt-xs">
-                <span className="text-2xl font-bold text-on-surface">{data.cycle.fsh}</span>
+                <span className="text-2xl font-bold text-on-surface">{data?.cycle?.fsh || "--"}</span>
                 <span className="text-[11px] text-on-surface-variant">mIU/mL</span>
               </div>
               <span className="text-[10px] text-on-surface-variant/60 mt-sm flex items-center gap-xs">
-                <span className="material-symbols-outlined text-[12px]">check_circle</span> Normal Baseline
+                <span className="material-symbols-outlined text-[12px]">check_circle</span> {data ? "Normal Baseline" : "--"}
               </span>
             </div>
           </div>
@@ -271,7 +309,7 @@ export default function Dashboard() {
             <p className="text-text-secondary text-on-surface-variant mb-md">Your personalized hormonal actions for today.</p>
             
             <div className="flex flex-col gap-sm">
-              {data.tasks.map((task) => (
+              {data ? data.tasks.map((task) => (
                 <div
                   key={task.id}
                   onClick={() => toggleTask(task.id)}
@@ -288,13 +326,20 @@ export default function Dashboard() {
                     {task.text}
                   </span>
                 </div>
-              ))}
+              )) : (
+                [1, 2, 3].map((i) => (
+                  <div key={i} className="flex items-center gap-md p-md rounded-2xl bg-surface-container-low/20 border border-outline-variant/10">
+                    <span className="w-5 h-5 rounded bg-outline-variant/20 animate-pulse"></span>
+                    <span className="h-4 w-3/4 rounded bg-outline-variant/20 animate-pulse"></span>
+                  </div>
+                ))
+              )}
             </div>
           </div>
 
           <div className="mt-md pt-md border-t border-outline-variant/10 flex justify-between items-center">
             <span className="text-[11px] text-on-surface-variant/80 font-medium font-label-caps">
-              {data.tasks.filter(t => t.completed).length} of {data.tasks.length} Completed
+              {data ? `${data.tasks.filter(t => t.completed).length} of ${data.tasks.length} Completed` : "-- Tasks"}
             </span>
             <Link href="/symptoms" className="text-primary hover:underline text-[11px] font-bold font-label-caps flex items-center gap-xs">
               Log Symptoms <span className="material-symbols-outlined text-[14px]">edit</span>
@@ -312,7 +357,9 @@ export default function Dashboard() {
               <h3 className="font-title-card text-title-card text-on-surface font-semibold">AI Insights Summary</h3>
             </div>
             <p className="text-body-main text-on-surface-variant leading-relaxed text-[14px]">
-              "Your LH levels show a normal follicular baseline. Based on your estrogen curve, ovulation is predicted in 8 days. Consider scheduling high-energy tasks for early next week. Your acne and bloating symptoms have decreased by 15% compared to this day last cycle."
+              {data 
+                ? "\"Your LH levels show a normal follicular baseline. Based on your estrogen curve, ovulation is predicted in 8 days. Consider scheduling high-energy tasks for early next week. Your acne and bloating symptoms have decreased by 15% compared to this day last cycle.\""
+                : "Loading clinical intelligence report..."}
             </p>
           </div>
           <div className="mt-lg flex gap-sm items-center">
