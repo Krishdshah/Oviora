@@ -20,7 +20,6 @@ os.environ["PADDLE_PDX_DISABLE_MODEL_SOURCE_CHECK"] = "True"
 
 import cv2
 import numpy as np
-from paddleocr import PaddleOCR
 from pdf2image import convert_from_path
 from PIL import Image
 from typing import Any
@@ -30,11 +29,18 @@ from app.logger import logger
 
 class OCRService:
     def __init__(self) -> None:
-        self.ocr = PaddleOCR(
-            use_textline_orientation=True,
-            lang=settings.OCR_LANGUAGE,
-            device="gpu" if settings.OCR_USE_GPU else "cpu",
-        )
+        self._ocr = None
+
+    @property
+    def ocr(self):
+        if self._ocr is None:
+            from paddleocr import PaddleOCR
+            self._ocr = PaddleOCR(
+                use_textline_orientation=True,
+                lang=settings.OCR_LANGUAGE,
+                device="gpu" if settings.OCR_USE_GPU else "cpu",
+            )
+        return self._ocr
 
     @staticmethod
     def preprocess(image: np.ndarray) -> np.ndarray:
