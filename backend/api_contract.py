@@ -79,3 +79,57 @@ class HormoneAnalysisResponse(BaseModel):
     error: Optional[str] = None
     data: Optional[Dict[str, Any]] = None
     message: Optional[str] = None
+
+class NutritionRankRequest(BaseModel):
+    age: float = Field(..., ge=10, le=100)
+    weight_kg: float = Field(..., ge=30, le=250)
+    height_cm: float = Field(..., ge=100, le=250)
+    waist_inch: float = Field(..., ge=20, le=100)
+    hip_inch: float = Field(..., ge=20, le=100)
+    cycle_regularity: str = Field(..., pattern="^(regular|irregular)$")
+    dietary_preference: str = Field(..., pattern="^(Vegetarian|Non-Vegetarian|veg|non-veg)$")
+    allergies: List[str] = Field(default=[])
+    symptoms: List[str] = Field(default=[])
+    goals: List[str] = Field(default=[])
+    exercise_hours_per_week: float = Field(..., ge=0, le=100)
+    fasting_glucose: Optional[float] = None
+    fasting_insulin: Optional[float] = None
+    lh: Optional[float] = None
+    fsh: Optional[float] = None
+    amh: Optional[float] = None
+    vit_d: Optional[float] = None
+    diabetes_status: bool = False
+    hypertension_status: bool = False
+
+class FoodRecommendation(BaseModel):
+    food_id: int
+    food_name: str
+    category: str
+    calories: float
+    protein: float
+    carbs: float
+    fat: float
+    fiber: float
+    glycemic_index: float
+    pcos_friendliness_score: float
+    ranking_score: float
+    is_avoided: bool
+    explanation: str
+
+class NutritionRankResponse(BaseModel):
+    patient_profile: Dict[str, Any]
+    recommendations: List[FoodRecommendation]
+
+class MealPlanRequest(BaseModel):
+    patient_data: NutritionRankRequest
+    cuisine_preference: str = "Indian"
+    duration_days: int = 5
+    budget: str = "Medium"
+    groq_model: str = "llama-3.3-70b-versatile"
+
+class MealPlanResponse(BaseModel):
+    success: bool = True
+    meal_plan: Dict[str, Any]
+    grocery_list: Dict[str, List[str]]
+    healthy_swaps: List[Dict[str, str]]
+    clinical_explanation: str
