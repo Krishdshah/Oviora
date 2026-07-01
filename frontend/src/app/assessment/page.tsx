@@ -103,7 +103,7 @@ export default function AssessmentPage() {
     setAnalyzing(true);
     setResult(null);
     try {
-      const response = await apiService.predictClinicalRisk(formData);
+      const response = await apiService.predictClinicalRisk({ features: formData });
       setResult(response);
     } catch (error) {
       console.error(error);
