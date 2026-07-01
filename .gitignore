@@ -153,4 +153,3 @@ backend/venv/
 **/__pycache__/
 *.pyc
 *.pyo
-backend/models/
